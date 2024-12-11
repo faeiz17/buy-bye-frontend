@@ -1,4 +1,4 @@
-@import './../../color/color.scss';
+@use './../../color/color' as *;
 .appbar{
     a{
         margin-left: 2%;

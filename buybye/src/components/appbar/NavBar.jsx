@@ -1,4 +1,4 @@
-import  { useState } from "react";
+import { useState } from "react";
 import {
   AppBar,
   Toolbar,
@@ -22,7 +22,7 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { Link } from "react-router-dom";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
-import style from './NavBar.module.scss'
+import style from './NavBar.module.scss';
 
 function NavBar() {
   const theme = useTheme();
@@ -50,6 +50,7 @@ function NavBar() {
     { name: "Ration Pack", to: "/ration-pack" },
     { name: "Contact", to: "/contact" },
     { name: "About Us", to: "/about-us" },
+    isMobile?{  name: "Cart", to: "/cart" }:{}
   ];
 
   return (
@@ -83,31 +84,32 @@ function NavBar() {
                       <ListItemText primary={link.name} />
                     </ListItem>
                   ))}
-                              <OutlinedInput
-              sx={{
-                marginLeft: 1,
-                
-                width: "25ch",
-                "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                  borderColor: "primary.main",
-                },
-              }}
-              autoComplete="on"
-              inputProps={{ "aria-label": "search" }}
-              size="small"
-              placeholder="Search here"
-              type="search"
-              endAdornment={
-                <InputAdornment position="end">
-                  <IconButton>
-                    <SearchIcon color="primary" />
-                  </IconButton>
-                </InputAdornment>
-              }
-            />
+                  <OutlinedInput
+                    sx={{
+                      marginLeft: 1,
+                      width: "25ch",
+                      "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                        borderColor: "primary.main",
+                      },
+                    }}
+                    autoComplete="on"
+                    inputProps={{ "aria-label": "search" }}
+                    size="small"
+                    placeholder="Search here"
+                    type="search"
+                    endAdornment={
+                      <InputAdornment position="end">
+                        <IconButton>
+                          <SearchIcon color="primary" />
+                        </IconButton>
+                      </InputAdornment>
+                    }
+                  />
                 </List>
               </Box>
             </Drawer>
+
+           
           </>
         )}
 
@@ -121,6 +123,21 @@ function NavBar() {
         >
           BuyBye
         </Typography>
+          {isMobile && (
+            <>
+             {/* Mobile Cart and Profile Icons */}
+            <Box sx={{  }}>
+              <IconButton
+                color="inherit"
+                edge="end"
+                onClick={handleProfileMenuOpen}
+                sx={{ marginRight: 15 }}
+              >
+                <AccountCircle />
+              </IconButton>
+            </Box>
+            </>
+          )}
 
         {/* Desktop View Links */}
         {!isMobile && (
@@ -165,21 +182,24 @@ function NavBar() {
           </>
         )}
 
-        {/* Cart and Profile Icons */}
-        <Box sx={{ marginLeft: "auto", display: "flex", alignItems: "center" }}>
-          <IconButton color="inherit">
-            <Badge badgeContent={4} color="error">
-              <ShoppingCartIcon />
-            </Badge>
-          </IconButton>
-          <IconButton
-            color="inherit"
-            edge="end"
-            onClick={handleProfileMenuOpen}
-          >
-            <AccountCircle />
-          </IconButton>
-        </Box>
+        {/* Cart and Profile Icons (Visible on Desktop) */}
+        {!isMobile && (
+          <Box sx={{ marginLeft: "auto", display: "flex", alignItems: "center" }}>
+            <IconButton color="inherit">
+              <Badge badgeContent={4} color="error">
+                <ShoppingCartIcon />
+              </Badge>
+            </IconButton>
+            <IconButton
+              color="inherit"
+              edge="end"
+              onClick={handleProfileMenuOpen}
+            >
+              <AccountCircle />
+            </IconButton>
+          </Box>
+        )}
+
         <Menu
           anchorEl={anchorEl}
           open={Boolean(anchorEl)}
