@@ -1,15 +1,17 @@
-$primary-main: #ff652f;
+$primary-main: #4d216d;
 $primary-contrast-text: #ffffff;
 
-$secondary-main: #ffe400;
+$secondary-main: #ffd600;
+$secondary-contrast-text: rgba(255, 0, 0, 0);
 
-$info-main: #b1c0cb;
+$info-main: #4d216d;
 
-$divider-color: #14a76c;
+$divider-color: #4a148c;
 
-$error-main: #f44336;
+$warning-main: #ffffff;
+$warning-contrast-text: #4d216d;
 
-$warning-main: #14a76c;
+$success-main: #4a148c;
 
-$background-default: #272727;
-$background-paper: #1e1e1e;
+$background-default: #ffffff; // Assuming default for light type
+$background-paper: #f5f5f5; // A common light theme paper color
