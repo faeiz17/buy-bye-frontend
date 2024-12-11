@@ -11,27 +11,29 @@ import { createTheme } from "@mui/material";
 //Creating Theme For MUI
 export const CustomTheme = createTheme({
   palette: {
-    mode: "dark",
+    type: "light",
     primary: {
-      main: "#ff652f",
-      contrastText: "#ffffff",
+      main: "#4d216d",
     },
     secondary: {
-      main: "#ffe400",
-    },
-    info: {
-      main: "#b1c0cb",
-    },
-    divider: "#14a76c",
-    error: {
-      main: "#f44336",
+      main: "#ffd600",
+      contrastText: "rgba(255,0,0,0)",
     },
     warning: {
-      main: "#14a76c",
+      main: "#ffffff",
+      contrastText: "#4d216d",
     },
-    background: {
-      default: "#272727",
-      paper: "#1e1e1e",
+    info: {
+      main: "#4d216d",
+    },
+    success: {
+      main: "#4a148c",
+    },
+    divider: "#4a148c",
+  },
+  props: {
+    MuiAppBar: {
+      color: "transparent",
     },
   },
 });

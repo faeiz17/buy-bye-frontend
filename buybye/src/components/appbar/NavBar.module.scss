@@ -1,0 +1,28 @@
+@import './../../color/color.scss';
+.appbar{
+    a{
+        margin-left: 2%;
+        margin-right: 8px;
+        text-transform: uppercase;
+        transition: all 0.3s ease-in-out;
+
+       ;
+        text-decoration-line: none;
+        &:hover{
+            cursor: pointer;
+            text-underline-offset: 4px;
+            text-decoration-thickness:4px ;
+            text-decoration-line: underline;
+        }
+        &:focus{
+         font-weight: 600;
+            color: $primary-main;
+            text-underline-offset: 4px;
+            text-decoration-thickness: 4px;
+            text-decoration-line: underline;
+            text-decoration-color: $secondary-main;
+        }
+        
+    }
+    
+}
