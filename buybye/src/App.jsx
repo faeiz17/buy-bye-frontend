@@ -6,12 +6,14 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Signup from "./pages/signup/Signup";
 
 import Homepage from "./pages/homepage/Homepage";
+import RationPackNew from "./pages/ration pack/RationPackNew";
 function App() {
   return (
     <Router>
       <Routes>
         <Route path={ROUTES.HOMEPAGE} element={<Layout />}>
           <Route path={ROUTES.HOMEPAGE} element={<Homepage />} />
+          <Route path={ROUTES.RATION_PACK} element={<RationPackNew />} />
           <Route element={<ProtectedRoutes />}></Route>
         </Route>
 

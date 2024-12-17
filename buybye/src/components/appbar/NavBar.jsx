@@ -22,7 +22,7 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { Link } from "react-router-dom";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
-import style from './NavBar.module.scss';
+import style from "./NavBar.module.scss";
 
 function NavBar() {
   const theme = useTheme();
@@ -50,7 +50,7 @@ function NavBar() {
     { name: "Ration Pack", to: "/ration-pack" },
     { name: "Contact", to: "/contact" },
     { name: "About Us", to: "/about-us" },
-    isMobile?{  name: "Cart", to: "/cart" }:{}
+    isMobile ? { name: "Cart", to: "/cart" } : {},
   ];
 
   return (
@@ -80,7 +80,12 @@ function NavBar() {
               >
                 <List>
                   {links.map((link) => (
-                    <ListItem button key={link.name} component={Link} to={link.to}>
+                    <ListItem
+                      button
+                      key={link.name}
+                      component={Link}
+                      to={link.to}
+                    >
                       <ListItemText primary={link.name} />
                     </ListItem>
                   ))}
@@ -108,8 +113,6 @@ function NavBar() {
                 </List>
               </Box>
             </Drawer>
-
-           
           </>
         )}
 
@@ -123,10 +126,10 @@ function NavBar() {
         >
           BuyBye
         </Typography>
-          {isMobile && (
-            <>
-             {/* Mobile Cart and Profile Icons */}
-            <Box sx={{  }}>
+        {isMobile && (
+          <>
+            {/* Mobile Cart and Profile Icons */}
+            <Box sx={{}}>
               <IconButton
                 color="inherit"
                 edge="end"
@@ -136,8 +139,8 @@ function NavBar() {
                 <AccountCircle />
               </IconButton>
             </Box>
-            </>
-          )}
+          </>
+        )}
 
         {/* Desktop View Links */}
         {!isMobile && (
@@ -184,7 +187,9 @@ function NavBar() {
 
         {/* Cart and Profile Icons (Visible on Desktop) */}
         {!isMobile && (
-          <Box sx={{ marginLeft: "auto", display: "flex", alignItems: "center" }}>
+          <Box
+            sx={{ marginLeft: "auto", display: "flex", alignItems: "center" }}
+          >
             <IconButton color="inherit">
               <Badge badgeContent={4} color="error">
                 <ShoppingCartIcon />
@@ -205,7 +210,9 @@ function NavBar() {
           open={Boolean(anchorEl)}
           onClose={handleProfileMenuClose}
         >
-          <MenuItem onClick={handleProfileMenuClose}>Login</MenuItem>
+          <MenuItem onClick={handleProfileMenuClose} href="/login">
+            Login
+          </MenuItem>
           <MenuItem onClick={handleProfileMenuClose}>Sign Up</MenuItem>
           <MenuItem onClick={handleProfileMenuClose}>Profile</MenuItem>
         </Menu>

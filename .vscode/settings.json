@@ -1,0 +1,10 @@
+{
+"tslint.enable":false,
+"typescript.validate.enable": false,
+"typescript.enabled": false,
+
+
+ "typescript.suggest.enabled": false,
+  "typescript.validate.enable": false,
+  "no-debugger":"off"
+}
