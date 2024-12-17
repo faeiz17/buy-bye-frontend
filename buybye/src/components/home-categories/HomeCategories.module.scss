@@ -1,0 +1,67 @@
+.categories-section {
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+  background-color: #f5f5f5; // Optional background color
+  text-align: center;
+  margin: 2rem 0;
+
+  .section-title {
+    font-size: 1.5rem; // Adjust title size
+    font-weight: bold;
+    margin-bottom: 1.5rem;
+    color: #333;
+  }
+
+  .categories-container {
+    display: flex; // Align cards horizontally
+    flex-direction: row; // Ensure row direction
+    align-items: center; // Center cards vertically
+    justify-content: center; // Center horizontally
+    animation: slide-left 40s linear infinite; // Sliding animation
+    width: fit-content; // Prevent cards from wrapping
+    gap: 1.5rem; // Space between cards
+    padding: 0 2rem;
+    &:hover {
+      animation-play-state: paused; // Pause the animation on hover
+      cursor: pointer;
+    }
+
+    .category-card {
+      min-width: 14rem; // Card width
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); // Soft shadow
+      background-color: #fff; // Optional card background
+      overflow: hidden;
+      border: 1px solid #e0e0e0;
+      transition: transform 0.3s ease;
+
+      &:hover {
+        transform: scale(1.05); // Scale up on hover
+      }
+
+      img {
+        width: 100%; // Ensure images fit the card
+        height: auto;
+      }
+
+      .category-title {
+        text-align: center;
+        font-size: 1rem;
+        font-weight: bold;
+        margin-top: 0.5rem;
+        color: #555;
+      }
+    }
+  }
+}
+
+// Keyframes for sliding animation
+@keyframes slide-left {
+  from {
+    transform: translateX(0); // Start at the original position
+  }
+  to {
+    transform: translateX(-100%); // Move cards left continuously
+  }
+}

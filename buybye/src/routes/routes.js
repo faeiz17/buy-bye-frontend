@@ -9,6 +9,6 @@ const ROUTES = {
   PRODUCT_LISTING: "/products",
   PRODUCT_DETAILS: "/products/:productId",
   SEARCH: "search/",
+  RATION_PACK: "/ration-pack",
 };
 export default ROUTES;
-
