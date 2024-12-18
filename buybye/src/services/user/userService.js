@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = "http://localhost:5000/";
+const BASE_URL = "https://buy-bye-backend.vercel.app/";
 
 export const signUpServiceFunc = async (userData) => {
   try {
