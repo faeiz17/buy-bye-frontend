@@ -12,7 +12,6 @@ export const signUpServiceFunc = async (userData) => {
   } catch (error) {
     console.error("Error in sign up:", error);
 
-    // Check if it's an Axios error with a response
     if (error.response) {
       const { status, data } = error.response;
 
