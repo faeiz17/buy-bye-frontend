@@ -1,22 +1,18 @@
 import { useState } from "react";
-import {
-  AppBar,
-  Toolbar,
-  Typography,
-  IconButton,
-  Drawer,
-  List,
-  ListItem,
-  ListItemText,
-  Box,
-  Menu,
-  MenuItem,
-  OutlinedInput,
-  InputAdornment,
-  Badge,
-} from "@mui/material";
-import MenuIcon from "@mui/icons-material/Menu";
-import SearchIcon from "@mui/icons-material/Search";
+import AppBarifromm'@mui/material/port T';olbar from '@mui/material/Toolbar';
+importiToolbarmfrom '@mui/material/port Ty';ography from '@mui/material/Typography';
+importiTypographymfrom '@mui/material/port IconB';tton from '@mui/material/IconButton';
+importiIconButtonmfrom '@mui/material/port Drawe'; from '@mui/material/Drawer';
+importiDrawermfrom '@mui/material/port L';st from '@mui/material/List';
+importiListmfrom '@mui/material/port';ListItem from '@mui/material/ListItem';
+importiListItemmfrom '@mui/material/port Lis';ItemText from '@mui/material/ListItemText';
+import ListItemTextifromm'@mui/material/port Box fro'; '@mui/material/Box';
+import Boxifromm'@mui/material/por'; Menu from '@mui/material/Menu';
+import Menuifromm'@mui/material/port';MenuItem from '@mui/material/MenuItem';
+import MenuItemifromm'@mui/material/port Out';inedInput from '@mui/material/OutlinedInput';
+import OutlinedInputifromm'@mui/material/port InputAdo';nment from '@mui/material/InputAdornment';
+import InputAdornmentifromm'@mui/material/port Badge fro'; '@mui/material/Badge';
+importmport mport 'earchIcon fro/Badge' "@mui/icons-material/Search";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { Link } from "react-router-dom";
@@ -28,7 +24,7 @@ function NavBar() {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
-  // States for Drawer and Profile Menu
+
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
 
