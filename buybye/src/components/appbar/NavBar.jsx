@@ -1,29 +1,29 @@
 import { useState } from "react";
-import AppBarifromm'@mui/material/port T';olbar from '@mui/material/Toolbar';
-importiToolbarmfrom '@mui/material/port Ty';ography from '@mui/material/Typography';
-importiTypographymfrom '@mui/material/port IconB';tton from '@mui/material/IconButton';
-importiIconButtonmfrom '@mui/material/port Drawe'; from '@mui/material/Drawer';
-importiDrawermfrom '@mui/material/port L';st from '@mui/material/List';
-importiListmfrom '@mui/material/port';ListItem from '@mui/material/ListItem';
-importiListItemmfrom '@mui/material/port Lis';ItemText from '@mui/material/ListItemText';
-import ListItemTextifromm'@mui/material/port Box fro'; '@mui/material/Box';
-import Boxifromm'@mui/material/por'; Menu from '@mui/material/Menu';
-import Menuifromm'@mui/material/port';MenuItem from '@mui/material/MenuItem';
-import MenuItemifromm'@mui/material/port Out';inedInput from '@mui/material/OutlinedInput';
-import OutlinedInputifromm'@mui/material/port InputAdo';nment from '@mui/material/InputAdornment';
-import InputAdornmentifromm'@mui/material/port Badge fro'; '@mui/material/Badge';
-importmport mport 'earchIcon fro/Badge' "@mui/icons-material/Search";
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import Typography from '@mui/material/Typography';
+import IconButton from '@mui/material/IconButton';
+import Drawer from '@mui/material/Drawer';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
+import Box from '@mui/material/Box';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import OutlinedInput from '@mui/material/OutlinedInput';
+import InputAdornment from '@mui/material/InputAdornment';
+import Badge from '@mui/material/Badge';
+import MenuIcon from "@mui/icons-material/Menu";
+import SearchIcon from "@mui/icons-material/Search";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { Link } from "react-router-dom";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
 import style from "./NavBar.module.scss";
-
 function NavBar() {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
-
 
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);

@@ -5,35 +5,48 @@ import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import styles from "./HomeCategories.module.scss";
-
-const categories = [
-  { name: "Breakfast Essentials", image: "/images/card1.jpg" },
-  { name: "Dairy Offerings", image: "/images/card1.jpg" },
-  { name: "Meat and Fish", image: "/images/card1.jpg" },
-  { name: "Frozen Products", image: "/images/card1.jpg" },
-  { name: "Fruits and Vegetables", image: "/images/card1.jpg" },
-  { name: "Daal, Atta and Rice", image: "/images/card1.jpg" },
-];
+import { useSelector, useDispatch } from "react-redux";
+import { getProductCategories } from "@/redux/products/productSlice";
 
 function HomeCategories() {
+  const dispatch = useDispatch();
+  const products = useSelector((state) => state.products);
+
+  // Dispatch the getProductCategories action once when the component mounts
+  React.useEffect(() => {
+    dispatch(getProductCategories());
+  }, [dispatch]); // Dependency should be empty or a flag indicating the data fetch
+
+  if (products.loading) return <div>Loading...</div>; // Show loading if the data is being fetched
+
+  // Ensure that categories data is available before rendering
+  if (!products.productCategories || products.productCategories.length === 0) {
+    return <div>No categories available</div>;
+  }
+
   return (
     <Box className={styles["categories-section"]}>
       <Typography variant="h4" className={styles["section-title"]}>
         Explore Categories
       </Typography>
       <Box className={styles["categories-container"]}>
-        {/* Duplicate categories for seamless scrolling */}
-        {[...categories, ...categories].map((category, index) => (
+        {products.productCategories.map((category, index) => (
           <Card key={index} className={styles["category-card"]}>
             <CardMedia
               component="img"
-              height="140"
-              image={category.image}
-              alt={category.name}
+              sx={{
+                maxWidth: "100px",
+                width: "100%",
+                height: "100%",
+                margin: "auto",
+              }}
+              height="14"
+              image={category.imageURL}
+              alt={category.category}
             />
             <CardContent>
               <Typography variant="h6" className={styles["category-title"]}>
-                {category.name}
+                {category.category}
               </Typography>
             </CardContent>
           </Card>
@@ -44,45 +57,3 @@ function HomeCategories() {
 }
 
 export default HomeCategories;
-
-// import React from "react";
-// import { Box, Card, CardContent, CardMedia, Typography } from "@mui/material";
-// import styles from "./HomeCategories.module.scss"; // Import SCSS as an object
-
-// const categories = [
-//   { name: "Breakfast Essentials", image: "/images/card1.jpg" },
-//   { name: "Dairy Offerings", image: "/images/card1.jpg" },
-//   { name: "Meat and Fish", image: "/images/card1.jpg" },
-//   { name: "Frozen Products", image: "/images/card1.jpg" },
-//   { name: "Fruits and Vegetables", image: "/images/card1.jpg" },
-//   { name: "Daal, Atta and Rice", image: "/images/card1.jpg" },
-// ];
-
-// const HomeCategories= () => {
-//   return (
-//     <Box className={styles["categories-section"]}>
-//       <Typography variant="h4" className={styles["section-title"]}>
-//         Explore Categories
-//       </Typography>
-//       <Box className={styles["categories-container"]}>
-//         {categories.map((category, index) => (
-//           <Card key={index} className={styles["category-card"]}>
-//             <CardMedia
-//               component="img"
-//               height="140"
-//               image={category.image}
-//               alt={category.name}
-//             />
-//             <CardContent>
-//               <Typography variant="h6" className={styles["category-title"]}>
-//                 {category.name}
-//               </Typography>
-//             </CardContent>
-//           </Card>
-//         ))}
-//       </Box>
-//     </Box>
-//   );
-// };
-
-// export default HomeCategories;

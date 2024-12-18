@@ -1,43 +1,22 @@
 import React from "react";
-import {
-  Box,
-  Card,
-  CardContent,
-  CardMedia,
-  Typography,
-  Button,
-  Rating,
-} from "@mui/material";
+import Box from "@mui/material/Box";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import CardMedia from "@mui/material/CardMedia";
+import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
+import Rating from "@mui/material/Rating";
 import styles from "./HomeFeatured.module.scss"; // Import SCSS as an object
-
-const products = [
-  {
-    name: "Potatoes",
-    price: "Rs 160/kg",
-    rating: 4.5,
-    image: "/images/card1.jpg",
-  },
-  {
-    name: "Adens Mozarella Cheese",
-    price: "Rs 340/pack",
-    rating: 4.8,
-    image: "/images/card1.jpg",
-  },
-  {
-    name: "Sugar - Loose Bag",
-    price: "Rs 125/kg",
-    rating: 4.3,
-    image: "/images/card1.jpg",
-  },
-  {
-    name: "Tapal Danedar Tea",
-    price: "Rs 270/pack",
-    rating: 5,
-    image: "/images/card1.jpg",
-  },
-];
+import { useDispatch, useSelector } from "react-redux";
+import { getFeaturedProducts } from "@/redux/products/productSlice";
 
 const HomeFeatured = () => {
+  const dispatch = useDispatch();
+  const products = useSelector((state) => state.products.featureProducts);
+  React.useEffect(() => {
+    dispatch(getFeaturedProducts());
+  }, [dispatch]);
+
   return (
     <Box className={styles["featured-products"]}>
       <Typography variant="h4" className={styles["section-title"]}>
@@ -48,8 +27,14 @@ const HomeFeatured = () => {
           <Card key={index} className={styles["product-card"]}>
             <CardMedia
               component="img"
-              height="160"
-              image={product.image}
+              image={product.imageURL}
+              sx={{
+                objectFit: "contain",
+                height: "100%",
+
+                width: "12rem",
+                margin: "auto",
+              }}
               alt={product.name}
             />
             <CardContent className={styles["card-content"]}>
@@ -57,10 +42,10 @@ const HomeFeatured = () => {
                 {product.name}
               </Typography>
               <Typography variant="body1" className={styles["product-price"]}>
-                {product.price}
+                {product.basePrice}
               </Typography>
               <Rating
-                value={product.rating}
+                value={product.qualityScore}
                 readOnly
                 className={styles["product-rating"]}
               />
