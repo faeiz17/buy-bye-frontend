@@ -7,6 +7,8 @@ import Signup from "./pages/signup/Signup";
 
 import Homepage from "./pages/homepage/Homepage";
 import RationPackNew from "./pages/ration pack/RationPackNew";
+import Products from "./pages/products/Products";
+import ShopDetail from "./pages/shopdetail/ShopDetail";
 function App() {
   return (
     <Router>
@@ -14,6 +16,8 @@ function App() {
         <Route path={ROUTES.HOMEPAGE} element={<Layout />}>
           <Route path={ROUTES.HOMEPAGE} element={<Homepage />} />
           <Route path={ROUTES.RATION_PACK} element={<RationPackNew />} />
+          <Route path={ROUTES.SHOP} element={<Products/>} />
+          <Route path={ROUTES.SHOP_DETAILS} element={<ShopDetail/>} />
           <Route element={<ProtectedRoutes />}></Route>
         </Route>
 
