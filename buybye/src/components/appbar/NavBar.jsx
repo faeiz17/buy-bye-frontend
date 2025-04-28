@@ -41,7 +41,7 @@ function NavBar() {
   };
 
   const links = [
-    { name: "Home", to: "/home" },
+    { name: "Home", to: "/" },
     { name: "Shop", to: "/shop" },
     { name: "Ration Pack", to: "/ration-pack" },
     { name: "Contact", to: "/contact" },

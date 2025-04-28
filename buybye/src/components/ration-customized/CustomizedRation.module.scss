@@ -1,80 +1,316 @@
   
+  // .customized-ration {
+  //   background-color: #f4f4f4;
+  //   padding: 4rem 2rem;
+  
+  //   .section-title {
+  //     font-size: 2rem;
+  //     margin-bottom: 2rem;
+  //   }
+  
+  //   .customization-options {
+  //     display: flex;
+  //     flex-wrap: wrap;
+  //     justify-content: center;
+  //     margin-bottom: 2rem;
+  
+  //     .option-card {
+  //       background-color: #fff;
+  //       border-radius: 8px;
+  //       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  //       padding: 1.5rem;
+  //       margin: 1rem;
+  //       flex-basis: 18rem;
+  
+  //       .option-name {
+  //         font-size: 1.2rem;
+  //         margin-bottom: 1rem;
+  //       }
+  
+  //       .option-choices {
+  //         display: flex;
+  //         flex-direction: column;
+  //         align-items: start;
+  
+  //         .choice-label {
+  //           display: flex;
+  //           align-items: center;
+  //           margin-bottom: 0.5rem;
+  
+  //           input {
+  //             margin-right: 0.5rem;
+  //           }
+  //         }
+  //       }
+  //     }
+  //   }
+  
+  //   .customized-pack {
+  //     background-color: #fff;
+  //     border-radius: 8px;
+  //     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  //     padding: 1.5rem;
+  //     text-align: center;
+  
+  //     .pack-title {
+  //       font-size: 1.5rem;
+  //       margin-bottom: 1rem;
+  //     }
+  
+  //     .pack-contents {
+  //       font-size: 1.1rem;
+  //       color: #666;
+  //       margin-bottom: 1rem;
+  //     }
+  
+  //     .pack-price {
+  //       font-size: 1.2rem;
+  //       margin-bottom: 1rem;
+  //     }
+  
+  //     .add-to-cart {
+  //       background-color: #4d216d;
+  //       color: #fff;
+  //       border: none;
+  //       padding: 0.5rem 1rem;
+  //       border-radius: 4px;
+  //       cursor: pointer;
+  //     }
+  //   }
+  // }
+
   .customized-ration {
     background-color: #f4f4f4;
-    padding: 4rem 2rem;
+    padding: 2rem 1rem;
+    max-width: 1200px;
+    margin: 0 auto;
   
     .section-title {
-      font-size: 2rem;
-      margin-bottom: 2rem;
+      font-size: 1.5rem;
+      margin-bottom: 1.5rem;
+      text-align: center;
+      color: #4d216d;
     }
   
-    .customization-options {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
+    .essentials-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 1.5rem;
       margin-bottom: 2rem;
   
-      .option-card {
+      .item-card {
         background-color: #fff;
         border-radius: 8px;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        padding: 1.5rem;
-        margin: 1rem;
-        flex-basis: 18rem;
+        overflow: hidden;
+        transition: all 0.2s ease;
+        display: flex;
+        flex-direction: column;
   
-        .option-name {
-          font-size: 1.2rem;
-          margin-bottom: 1rem;
+        &:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
   
-        .option-choices {
+        .image-container {
+          position: relative;
+          height: 100px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: #f8f8f8;
+          // background: #bd6969;
+  
+          .product-image {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            // padding: 0.5rem;
+            padding-top: 1rem;
+            padding-bottom: 0rem;
+          }
+  
+          .image-overlay-text {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            // background: rgba(0, 0, 0, 0.6);
+            color: rgb(87, 87, 87);
+            padding: 0rem 0.5rem;
+            padding-top: 0.5rem;
+            font-size: 1.2rem;
+            font-weight: 400;
+            text-align: center;
+            // text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+          }
+        }
+  
+        .card-footer {
+          padding: 0.75rem;
           display: flex;
           flex-direction: column;
-          align-items: start;
+          flex-grow: 1;
   
-          .choice-label {
-            display: flex;
-            align-items: center;
+          .price-section {
             margin-bottom: 0.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
   
-            input {
-              margin-right: 0.5rem;
+            .item-description {
+              color: #666;
+              font-size: 0.7rem;
+            }
+  
+            .item-price {
+              color: #4d216d;
+              font-weight: 600;
+              font-size: 0.8rem;
+            }
+          }
+  
+          .item-checkbox {
+            margin: 0;
+            justify-content: center;
+            padding-top: 0.25rem;
+            border-top: 1px solid #f0f0f0;
+  
+            .MuiTypography-root {
+              font-size: 0.8rem;
             }
           }
         }
       }
     }
   
+      // .item-card {
+      //   background-color: #fff;
+      //   border-radius: 8px;
+      //   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      //   padding: 1.5rem;
+      //   display: flex;
+      //   flex-direction: column;
+      //   align-items: center;
+      //   transition: all 0.3s ease;
+      //   text-align: center;
+  
+      //   &:hover {
+      //     transform: translateY(-3px);
+      //     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+      //   }
+  
+      //   .item-image-container {
+      //     width: 100%;
+      //     height: 160px;
+      //     margin-bottom: 1rem;
+      //     display: flex;
+      //     align-items: center;
+      //     justify-content: center;
+      //   }
+  
+      //   .item-image {
+      //     max-width: 100%;
+      //     max-height: 100%;
+      //     object-fit: contain;
+      //     border-radius: 4px;
+      //   }
+  
+      //   .item-name {
+      //     font-weight: 500;
+      //     margin-bottom: 0.5rem;
+      //     color: #333;
+      //   }
+  
+      //   .item-price {
+      //     color: #4d216d;
+      //     font-weight: 600;
+      //     margin-bottom: 1rem;
+      //   }
+  
+      //   .item-checkbox {
+      //     margin-top: auto;
+      //     width: 100%;
+      //     justify-content: center;
+      //   }
+      
+  
     .customized-pack {
       background-color: #fff;
       border-radius: 8px;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-      padding: 1.5rem;
-      text-align: center;
+      padding: 2rem;
+      margin-top: 2rem;
   
       .pack-title {
         font-size: 1.5rem;
-        margin-bottom: 1rem;
+        margin-bottom: 1.5rem;
+        color: #4d216d;
+        text-align: center;
       }
   
-      .pack-contents {
-        font-size: 1.1rem;
-        color: #666;
-        margin-bottom: 1rem;
+      .selected-items {
+        max-height: 300px;
+        overflow-y: auto;
+        margin-bottom: 1.5rem;
+        border: 1px solid #eee;
+        border-radius: 4px;
+        padding: 1rem;
+  
+        .selected-item {
+          display: flex;
+          align-items: center;
+          padding: 0.75rem 0;
+          border-bottom: 1px solid #f0f0f0;
+          gap: 1rem;
+  
+          &:last-child {
+            border-bottom: none;
+          }
+  
+          .selected-item-image {
+            width: 50px;
+            height: 50px;
+            object-fit: contain;
+            border-radius: 4px;
+          }
+  
+          .selected-item-details {
+            flex: 1;
+            display: flex;
+            justify-content: space-between;
+          }
+        }
       }
   
       .pack-price {
-        font-size: 1.2rem;
-        margin-bottom: 1rem;
+        font-size: 1.3rem;
+        font-weight: 600;
+        color: #4d216d;
+        text-align: center;
+        margin: 1.5rem 0;
       }
   
       .add-to-cart {
         background-color: #4d216d;
         color: #fff;
-        border: none;
-        padding: 0.5rem 1rem;
-        border-radius: 4px;
-        cursor: pointer;
+        display: block;
+        width: 100%;
+        padding: 0.75rem;
+        font-size: 1rem;
+        font-weight: 500;
+        margin: 0 auto;
+        transition: all 0.3s ease;
+  
+        &:hover {
+          background-color: #3a1a52;
+        }
+      }
+  
+      .empty-message {
+        text-align: center;
+        color: #666;
+        font-style: italic;
       }
     }
   }
