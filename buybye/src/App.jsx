@@ -10,6 +10,10 @@ import RationPackNew from "./pages/ration pack/RationPackNew";
 import Products from "./pages/products/Products";
 import ShopDetail from "./pages/shopdetail/ShopDetail";
 import ProductDetails from "./pages/product details/ProductDetails";
+import ContactUs from "./pages/contact/Contact";
+import About from "./pages/about/About";
+import Cart from "./pages/cart/Cart";
+import Checkout from "./pages/checkout/Checkout";
 function App() {
   return (
     <Router>
@@ -20,7 +24,10 @@ function App() {
           <Route path={ROUTES.SHOP} element={<Products />} />
           <Route path={ROUTES.SHOP_DETAILS} element={<ShopDetail />} />
           <Route path={ROUTES.PRODUCT_DETAILS} element={<ProductDetails />} />
-
+          <Route path={ROUTES.CONTACT} element={<ContactUs/>} />
+          <Route path={ROUTES.ABOUT} element={<About/>} />
+          <Route path={ROUTES.CART} element={<Cart/>} />
+          <Route path={ROUTES.CHECKOUT} element={<Checkout/>} />
           <Route element={<ProtectedRoutes />}></Route>
         </Route>
 
