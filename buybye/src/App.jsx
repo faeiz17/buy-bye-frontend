@@ -7,6 +7,8 @@ import Signup from "./pages/signup/Signup";
 
 import Homepage from "./pages/homepage/Homepage";
 import RationPackNew from "./pages/ration pack/RationPackNew";
+import Products from "./pages/products/Products";
+import ShopDetail from "./pages/shopdetail/ShopDetail";
 import ProductDetails from "./pages/product details/ProductDetails";
 function App() {
   return (
@@ -15,6 +17,8 @@ function App() {
         <Route path={ROUTES.HOMEPAGE} element={<Layout />}>
           <Route path={ROUTES.HOMEPAGE} element={<Homepage />} />
           <Route path={ROUTES.RATION_PACK} element={<RationPackNew />} />
+          <Route path={ROUTES.SHOP} element={<Products />} />
+          <Route path={ROUTES.SHOP_DETAILS} element={<ShopDetail />} />
           <Route path={ROUTES.PRODUCT_DETAILS} element={<ProductDetails />} />
 
           <Route element={<ProtectedRoutes />}></Route>
