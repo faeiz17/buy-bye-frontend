@@ -10,5 +10,7 @@ const ROUTES = {
   PRODUCT_DETAILS: "/products/:productId",
   SEARCH: "search/",
   RATION_PACK: "/ration-pack",
+  SHOP: "/shop",
+  SHOP_DETAILS: "/shop/:shopId", // New route for shop details
 };
 export default ROUTES;
