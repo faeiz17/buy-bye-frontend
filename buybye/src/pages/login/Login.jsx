@@ -10,39 +10,39 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import GoogleIcon from "@mui/icons-material/Google";
 import FacebookIcon from "@mui/icons-material/Facebook";
+import CircularProgress from "@mui/material/CircularProgress";
+import Alert from "@mui/material/Alert";
 import { useTheme } from "@mui/material/styles";
 import { useState, useEffect } from "react";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { loginSlicerFunc } from "../../redux/user/userSlice";
+import { login, selectAuthLoading, selectAuthError, selectIsAuthenticated } from "../../redux/slices/authSlice";
 import ROUTES from "../../routes/routes";
+
 function Login() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const user = useSelector((state) => state.user);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState(user.success);
+  // Select from Redux store using correct selectors
+  const isAuthenticated = useSelector(selectIsAuthenticated);
+  const loading = useSelector(selectAuthLoading);
+  const error = useSelector(selectAuthError);
+  
   const [loginData, setLoginData] = useState({
     email: "",
     password: "",
   });
 
   useEffect(() => {
-    setError(user.error);
-  }, [user]);
-  useEffect(() => {
-    if (user.success || user.userProfile) {
-      navigate(ROUTES.HOMEPAGE); // Navigate to homepage when login is successful
+    // If user is authenticated, redirect to homepage
+    if (isAuthenticated) {
+      navigate(ROUTES.HOMEPAGE);
     }
-  }, [user.success, navigate]);
+  }, [isAuthenticated, navigate]);
 
   const validateData = (data) => {
-    debugger;
     if (!data.email || !data.password) {
-      setError("Please fill all fields");
       return false;
     }
     return true;
@@ -54,6 +54,18 @@ function Login() {
 
   const togglePasswordVisibility = () => {
     setShowPassword((prev) => !prev);
+  };
+
+  const handleSubmit = () => {
+    if (validateData(loginData)) {
+      dispatch(login(loginData));
+    }
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      handleSubmit();
+    }
   };
 
   return (
@@ -131,6 +143,12 @@ function Login() {
             Login
           </Typography>
 
+          {error && (
+            <Alert severity="error" style={{ marginBottom: "1rem" }}>
+              {error}
+            </Alert>
+          )}
+
           <form>
             {/* Email Field */}
             <TextField
@@ -144,6 +162,7 @@ function Login() {
               onChange={(e) => {
                 setLoginData({ ...loginData, email: e.target.value });
               }}
+              onKeyPress={handleKeyPress}
             />
 
             {/* Password Field */}
@@ -158,6 +177,7 @@ function Login() {
               onChange={(e) => {
                 setLoginData({ ...loginData, password: e.target.value });
               }}
+              onKeyPress={handleKeyPress}
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
@@ -179,26 +199,41 @@ function Login() {
               color="primary"
               fullWidth
               style={{ marginTop: "1rem" }}
-              onClick={() => {
-                if (validateData(loginData)) {
-                  debugger;
-
-                  dispatch(loginSlicerFunc(loginData));
-                }
-              }}
+              onClick={handleSubmit}
+              disabled={loading}
             >
-              Log In
+              {loading ? <CircularProgress size={24} color="inherit" /> : "Log In"}
             </Button>
           </form>
+
+          {/* Forgot Password Link */}
+          <Typography
+            variant="body2"
+            align="center"
+            style={{ marginTop: "0.5rem" }}
+          >
+            <Button 
+              variant="text" 
+              color="primary" 
+              size="small"
+              onClick={() => navigate(ROUTES.FORGOT_PASSWORD)}
+            >
+              Forgot Password?
+            </Button>
+          </Typography>
 
           {/* Don't have an account */}
           <Typography
             variant="body2"
             align="center"
-            style={{ marginTop: "1rem", marginBottom: "1rem" }}
+            style={{ marginTop: "0.5rem", marginBottom: "1rem" }}
           >
-            Don’t have an account?{" "}
-            <Button variant="text" color="primary">
+            Don't have an account?{" "}
+            <Button 
+              variant="text" 
+              color="primary"
+              onClick={() => navigate(ROUTES.REGISTER)}
+            >
               Sign Up
             </Button>
           </Typography>

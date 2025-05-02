@@ -1,5 +1,8 @@
-import React,  { useState } from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
+
+// Import theme from the correct path
+import { theme } from '../../pages/theme';
 
 // Contact Form Component
 const ContactForm = () => {
@@ -12,14 +15,35 @@ const ContactForm = () => {
   });
   
   const [formSubmitted, setFormSubmitted] = useState(false);
+  const [errors, setErrors] = useState({});
+
+  const validateForm = () => {
+    const newErrors = {};
+    if (!formData.firstName.trim()) newErrors.firstName = 'First name is required';
+    if (!formData.lastName.trim()) newErrors.lastName = 'Last name is required';
+    if (!formData.email.trim()) newErrors.email = 'Email is required';
+    else if (!/\S+@\S+\.\S+/.test(formData.email)) newErrors.email = 'Email is invalid';
+    if (!formData.phone.trim()) newErrors.phone = 'Phone number is required';
+    
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
+    
+    // Clear error when user types
+    if (errors[name]) {
+      setErrors(prev => ({ ...prev, [name]: undefined }));
+    }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    
+    if (!validateForm()) return;
+    
     console.log('Form submitted:', formData);
     setFormSubmitted(true);
     
@@ -46,7 +70,7 @@ const ContactForm = () => {
     >
       <div style={styles.inputRow}>
         <motion.div 
-          style={styles.inputWrapper}
+          style={{...styles.inputWrapper, ...(errors.firstName ? styles.inputError : {})}}
           whileFocus={{ scale: 1.02 }}
         >
           <input
@@ -58,9 +82,13 @@ const ContactForm = () => {
             required
             style={styles.input}
           />
+          {errors.firstName && (
+            <div style={styles.errorText}>{errors.firstName}</div>
+          )}
         </motion.div>
+        
         <motion.div 
-          style={styles.inputWrapper}
+          style={{...styles.inputWrapper, ...(errors.lastName ? styles.inputError : {})}}
           whileFocus={{ scale: 1.02 }}
         >
           <input
@@ -72,11 +100,14 @@ const ContactForm = () => {
             required
             style={styles.input}
           />
+          {errors.lastName && (
+            <div style={styles.errorText}>{errors.lastName}</div>
+          )}
         </motion.div>
       </div>
       
       <motion.div 
-        style={styles.inputWrapper}
+        style={{...styles.inputWrapper, ...(errors.email ? styles.inputError : {})}}
         whileFocus={{ scale: 1.02 }}
       >
         <input
@@ -88,10 +119,13 @@ const ContactForm = () => {
           required
           style={styles.input}
         />
+        {errors.email && (
+          <div style={styles.errorText}>{errors.email}</div>
+        )}
       </motion.div>
       
       <motion.div 
-        style={styles.inputWrapper}
+        style={{...styles.inputWrapper, ...(errors.phone ? styles.inputError : {})}}
         whileFocus={{ scale: 1.02 }}
       >
         <input
@@ -103,10 +137,13 @@ const ContactForm = () => {
           required
           style={styles.input}
         />
+        {errors.phone && (
+          <div style={styles.errorText}>{errors.phone}</div>
+        )}
       </motion.div>
       
       <motion.div 
-        style={styles.inputWrapper}
+        style={{...styles.inputWrapper}}
         whileFocus={{ scale: 1.02 }}
       >
         <textarea
@@ -124,8 +161,19 @@ const ContactForm = () => {
         style={styles.button}
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
+        disabled={formSubmitted}
       >
-        {formSubmitted ? 'Message Sent!' : 'Send Message'}
+        {formSubmitted ? (
+          <div style={styles.successMessage}>
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+              <polyline points="22 4 12 14.01 9 11.01"></polyline>
+            </svg>
+            <span>Message Sent!</span>
+          </div>
+        ) : (
+          'Send Message'
+        )}
       </motion.button>
     </motion.form>
   );
@@ -187,6 +235,21 @@ const ContactInfo = () => {
           </div>
           <span style={styles.contactText}>Contact@buybye.com</span>
         </motion.div>
+
+        <motion.div 
+          style={styles.contactItem}
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.5, delay: 0.7 }}
+        >
+          <div style={styles.iconWrapper}>
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+              <circle cx="12" cy="10" r="3"></circle>
+            </svg>
+          </div>
+          <span style={styles.contactText}>123 Main Street, Lahore, Pakistan</span>
+        </motion.div>
       </div>
     </motion.div>
   );
@@ -237,17 +300,17 @@ const styles = {
     alignItems: 'center',
     minHeight: '100vh',
     padding: '20px',
-    background: 'linear-gradient(135deg, #8a2be2 0%, #4b0082 100%)',
+    background: `linear-gradient(135deg, ${theme.colors.primary.main} 0%, ${theme.colors.primary.dark} 100%)`,
     fontFamily: 'Inter, system-ui, sans-serif',
   },
   contactCard: {
     display: 'flex',
     width: '100%',
     maxWidth: '1000px',
-    background: 'rgba(255, 255, 255, 0.95)',
-    borderRadius: '20px',
+    background: theme.colors.background.default,
+    borderRadius: theme.borderRadius.lg,
     overflow: 'hidden',
-    boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
+    boxShadow: theme.shadows.xl,
     position: 'relative',
   },
   leftSection: {
@@ -257,7 +320,7 @@ const styles = {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#f0f0f0',
+    backgroundColor: theme.colors.background.paper,
     overflow: 'hidden',
   },
   imageWrapper: {
@@ -280,7 +343,7 @@ const styles = {
     left: 0,
     width: '100%',
     height: '100%',
-    background: 'linear-gradient(135deg, rgba(138, 43, 226, 0.3) 0%, rgba(75, 0, 130, 0.6) 100%)',
+    background: `linear-gradient(135deg, ${hexToRgba(theme.colors.primary.main, 0.3)} 0%, ${hexToRgba(theme.colors.primary.dark, 0.6)} 100%)`,
     mixBlendMode: 'multiply',
   },
   imageOverlay: {
@@ -298,10 +361,10 @@ const styles = {
     flexDirection: 'column',
   },
   heading: {
-    fontSize: '2.5rem',
-    fontWeight: '700',
+    fontSize: theme.typography.h2.fontSize,
+    fontWeight: theme.typography.h2.fontWeight,
     marginBottom: '30px',
-    color: '#333',
+    color: theme.colors.text.primary,
     textAlign: 'left',
   },
   form: {
@@ -322,61 +385,68 @@ const styles = {
   input: {
     width: '100%',
     padding: '12px 15px',
-    fontSize: '1rem',
-    border: '1px solid #e0e0e0',
-    borderRadius: '10px',
-    backgroundColor: '#f9f9f9',
+    fontSize: theme.typography.body1.fontSize,
+    border: `1px solid ${theme.colors.text.hint}`,
+    borderRadius: theme.borderRadius.sm,
+    backgroundColor: theme.colors.background.paper,
     transition: 'all 0.3s ease',
     outline: 'none',
-    '&:focus': {
-      borderColor: '#8a2be2',
-      boxShadow: '0 0 0 2px rgba(138, 43, 226, 0.2)',
-    },
+  },
+  inputError: {
+    borderColor: theme.colors.error,
+    boxShadow: `0 0 0 1px ${theme.colors.error}`,
+  },
+  errorText: {
+    color: theme.colors.error,
+    fontSize: '0.75rem',
+    marginTop: '4px',
+    position: 'absolute',
   },
   textarea: {
     width: '100%',
     padding: '12px 15px',
-    fontSize: '1rem',
-    border: '1px solid #e0e0e0',
-    borderRadius: '10px',
-    backgroundColor: '#f9f9f9',
+    fontSize: theme.typography.body1.fontSize,
+    border: `1px solid ${theme.colors.text.hint}`,
+    borderRadius: theme.borderRadius.sm,
+    backgroundColor: theme.colors.background.paper,
     resize: 'vertical',
     minHeight: '120px',
     outline: 'none',
     transition: 'all 0.3s ease',
-    '&:focus': {
-      borderColor: '#8a2be2',
-      boxShadow: '0 0 0 2px rgba(138, 43, 226, 0.2)',
-    },
   },
   button: {
     padding: '14px 30px',
-    fontSize: '1rem',
-    fontWeight: '600',
-    color: 'white',
-    backgroundColor: '#8a2be2',
+    fontSize: theme.typography.button.fontSize,
+    fontWeight: theme.typography.button.fontWeight,
+    color: theme.colors.primary.contrastText,
+    backgroundColor: theme.colors.primary.main,
     border: 'none',
-    borderRadius: '10px',
+    borderRadius: theme.borderRadius.md,
     cursor: 'pointer',
     transition: 'all 0.3s ease',
     marginTop: '10px',
-    boxShadow: '0 4px 15px rgba(138, 43, 226, 0.2)',
-    '&:hover': {
-      backgroundColor: '#7823c7',
-    },
+    boxShadow: theme.shadows.md,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  successMessage: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '8px',
   },
   contactInfo: {
     marginTop: '30px',
   },
   contactTitle: {
-    fontSize: '1.5rem',
-    fontWeight: '600',
+    fontSize: theme.typography.h3.fontSize,
+    fontWeight: theme.typography.h3.fontWeight,
     marginBottom: '10px',
-    color: '#333',
+    color: theme.colors.text.primary,
   },
   contactSubtitle: {
-    fontSize: '1rem',
-    color: '#666',
+    fontSize: theme.typography.body1.fontSize,
+    color: theme.colors.text.secondary,
     marginBottom: '20px',
     lineHeight: '1.5',
   },
@@ -396,14 +466,22 @@ const styles = {
     justifyContent: 'center',
     width: '40px',
     height: '40px',
-    backgroundColor: 'rgba(138, 43, 226, 0.1)',
+    backgroundColor: hexToRgba(theme.colors.primary.main, 0.1),
     borderRadius: '50%',
-    color: '#8a2be2',
+    color: theme.colors.primary.main,
   },
   contactText: {
-    fontSize: '0.95rem',
-    color: '#555',
+    fontSize: theme.typography.body2.fontSize,
+    color: theme.colors.text.secondary,
   },
 };
+
+// Helper function to convert hex to rgba
+function hexToRgba(hex, alpha) {
+  const r = parseInt(hex.slice(1, 3), 16);
+  const g = parseInt(hex.slice(3, 5), 16);
+  const b = parseInt(hex.slice(5, 7), 16);
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}
 
 export default ContactUs;
