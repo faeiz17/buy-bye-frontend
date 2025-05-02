@@ -1,104 +1,265 @@
-// .home-ad-container {
-//     display: flex;
-//     justify-content: center;
-//     align-items: center;
-//     margin: 7rem 0; // space above and below
-//   }
-  
-//   .carousel {
-//     width: 800px; 
-//     height: 400px;  
-//     overflow: hidden;
-//     border-radius: 20px;
-//     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-//   }
-  
-//   .carousel-image {
-//     width: 100%;
-//     height: 100%;
-//     object-fit: cover;
-//     transition: opacity 0.5s ease-in-out;
-//   }
-  
+@use './../../color/color' as *;
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
 .home-ad-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 7rem 0; // space above and below
-  }
+  padding: 3rem 1rem 4rem;
+  background-color: #fcfcfc;
+  font-family: 'Poppins', sans-serif;
   
-  .carousel {
-    width: 800px; // ⭐ you can change the width here manually
-    height: 400px; // ⭐ and height too
-    overflow: hidden;
-    border-radius: 20px; // ⭐ curved border
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-    position: relative;
+  @media (max-width: 768px) {
+    padding: 2rem 0.5rem 3rem;
   }
+}
+
+.section-title {
+  text-align: center;
+  font-weight: 600 !important;
+  color: $primary-main;
+  margin-bottom: 2rem !important;
+  position: relative;
+  display: inline-block;
+  left: 50%;
+  transform: translateX(-50%);
   
-  .carousel-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: opacity 0.5s ease-in-out;
-    // cursor: pointer;
-  }
-  
-  .carousel-arrow-left,
-  .carousel-arrow-right {
+  &::after {
+    content: '';
     position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 40px;
-    height: 40px;
-    background-color: rgba(255, 255, 255, 0.5);
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    font-size: 20px;
-    color: #333;
-    z-index: 10;
-    transition: all 0.3s ease;
+    width: 40%;
+    height: 3px;
+    background-color: $secondary-main;
+    bottom: -8px;
+    left: 30%;
+    border-radius: 2px;
+  }
   
+  @media (max-width: 768px) {
+    margin-bottom: 1.5rem !important;
+  }
+}
+
+.carousel-wrapper {
+  position: relative;
+  margin: 0 auto;
+  max-width: 1000px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.carousel {
+  width: 100%;
+  overflow: hidden;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  height: 400px;
+  position: relative;
+  
+  @media (max-width: 960px) {
+    height: 350px;
+  }
+  
+  @media (max-width: 768px) {
+    height: 300px;
+  }
+  
+  @media (max-width: 480px) {
+    height: 250px;
+  }
+}
+
+.carousel-slide {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+}
+
+.slide-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+}
+
+.slide-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, 
+    rgba($primary-main, 0.9) 0%, 
+    rgba($primary-main, 0.7) 30%, 
+    rgba($primary-main, 0.4) 60%, 
+    rgba($primary-main, 0.2) 100%
+  );
+  
+  .position-right & {
+    background: linear-gradient(270deg, 
+      rgba($primary-main, 0.9) 0%, 
+      rgba($primary-main, 0.7) 30%, 
+      rgba($primary-main, 0.4) 60%, 
+      rgba($primary-main, 0.2) 100%
+    );
+  }
+}
+
+.slide-content {
+  position: relative;
+  z-index: 2;
+  padding: 2rem;
+  max-width: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  
+  @media (max-width: 768px) {
+    max-width: 70%;
+  }
+  
+  @media (max-width: 480px) {
+    max-width: 100%;
+    padding: 1.5rem;
+  }
+  
+  &.position-left {
+    align-items: flex-start;
+    text-align: left;
+  }
+  
+  &.position-right {
+    align-items: flex-end;
+    text-align: right;
+    margin-left: auto;
+  }
+}
+
+.offer-icon {
+  color: $secondary-main;
+  margin-bottom: 1rem;
+  font-size: 2rem !important;
+  
+  @media (max-width: 768px) {
+    font-size: 1.5rem !important;
+    margin-bottom: 0.5rem;
+  }
+}
+
+.slide-title {
+  color: white !important;
+  font-weight: 700 !important;
+  margin-bottom: 1rem !important;
+  font-size: 2rem !important;
+  
+  @media (max-width: 960px) {
+    font-size: 1.8rem !important;
+  }
+  
+  @media (max-width: 768px) {
+    font-size: 1.5rem !important;
+    margin-bottom: 0.5rem !important;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 1.2rem !important;
+  }
+}
+
+.slide-subtitle {
+  color: rgba(255, 255, 255, 0.9) !important;
+  margin-bottom: 1.5rem !important;
+  
+  @media (max-width: 768px) {
+    font-size: 0.9rem !important;
+    margin-bottom: 1rem !important;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 0.8rem !important;
+  }
+}
+
+.slide-cta {
+  font-weight: 600 !important;
+  padding: 0.6rem 1.5rem !important;
+  text-transform: none !important;
+  font-size: 1rem !important;
+  
+  @media (max-width: 768px) {
+    padding: 0.4rem 1.2rem !important;
+    font-size: 0.9rem !important;
+  }
+}
+
+.carousel-arrow {
+  position: absolute;
+  z-index: 3;
+  background-color: white !important;
+  opacity: 0.8;
+  transition: all 0.3s ease !important;
+  
+  &:hover {
+    background-color: $secondary-main !important;
+    opacity: 1;
+    transform: scale(1.1);
+    
+    svg {
+      color: $primary-main;
+    }
+  }
+  
+  svg {
+    color: $primary-main;
+  }
+  
+  &.arrow-left {
+    left: -20px;
+    
+    @media (max-width: 768px) {
+      left: -10px;
+    }
+  }
+  
+  &.arrow-right {
+    right: -20px;
+    
+    @media (max-width: 768px) {
+      right: -10px;
+    }
+  }
+}
+
+.carousel-indicators {
+  display: flex;
+  justify-content: center;
+  margin-top: 1.5rem;
+  gap: 0.5rem;
+}
+
+.indicator {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: rgba($primary-main, 0.3);
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    background-color: rgba($primary-main, 0.6);
+  }
+  
+  &.active {
+    background-color: $primary-main;
+    width: 24px;
+    border-radius: 10px;
+    
     &:hover {
-      background-color: rgba(255, 255, 255, 0.8);
+      background-color: $primary-main;
     }
   }
-  
-  .carousel-arrow-left {
-    left: 15px;
-  }
-  
-  .carousel-arrow-right {
-    right: 15px;
-  }
-  
-  .carousel-indicators {
-    position: absolute;
-    bottom: 15px;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    gap: 8px;
-    z-index: 10;
-  }
-  
-  .indicator {
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    background-color: rgba(255, 255, 255, 0.5);
-    cursor: pointer;
-    transition: all 0.3s ease;
-  
-    &:hover {
-      background-color: rgba(255, 255, 255, 0.8);
-    }
-  
-    &.active {
-      background-color: white;
-      transform: scale(1.2);
-    }
-  }
+}

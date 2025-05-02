@@ -1,28 +1,151 @@
 @use './../../color/color' as *;
-.appbar{
-    a{
+
+// Import fonts - Poppins works great for modern UI
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+.appbar {
+    font-family: 'Poppins', sans-serif;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    
+    // Handle scrolled state with elevated appearance
+    &.scrolled {
+        box-shadow: 0 4px 20px rgba($primary-main, 0.1);
+        backdrop-filter: blur(10px);
+        background-color: rgba($warning-main, 0.95) !important;
+    }
+    
+    a {
+        position: relative;
         margin-left: 2%;
         margin-right: 8px;
         text-transform: uppercase;
         transition: all 0.3s ease-in-out;
-
-       ;
         text-decoration-line: none;
-        &:hover{
+        letter-spacing: 0.5px;
+        font-weight: 500;
+        
+        &:hover {
             cursor: pointer;
-            text-underline-offset: 4px;
-            text-decoration-thickness:4px ;
-            text-decoration-line: underline;
-        }
-        &:focus{
-         font-weight: 600;
             color: $primary-main;
-            text-underline-offset: 4px;
-            text-decoration-thickness: 4px;
-            text-decoration-line: underline;
-            text-decoration-color: $secondary-main;
+            
+            &::after {
+                width: 60%;
+                opacity: 1;
+            }
         }
         
+        &:focus {
+            font-weight: 600;
+            color: $primary-main;
+            outline: none;
+            
+            &::after {
+                width: 70%;
+                opacity: 1;
+            }
+        }
+        
+        // Modern underline effect
+        &::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 3px;
+            background-color: $secondary-main;
+            transition: all 0.3s ease-in-out;
+            border-radius: 4px 4px 0 0;
+            opacity: 0;
+        }
     }
     
+    // Custom badge styles
+    :global(.MuiBadge-badge) {
+        font-weight: 600;
+        min-width: 18px;
+        height: 18px;
+        padding: 0 4px;
+        font-size: 0.65rem;
+        border-radius: 10px;
+    }
+    
+    // Custom drawer and menu styles
+    :global(.MuiDrawer-paper) {
+        box-shadow: 0 8px 24px rgba($primary-main, 0.15);
+    }
+    
+    // Custom input styles
+    :global(.MuiInputBase-root) {
+        &:focus-within {
+            background-color: rgba($warning-main, 0.9);
+        }
+    }
+    
+    // Button hover effects
+    button {
+        transition: all 0.2s ease-in-out;
+        
+        &:hover {
+            transform: translateY(-1px);
+        }
+        
+        &:active {
+            transform: translateY(1px);
+        }
+    }
+    
+    // Logo styling
+    :global(.logo) {
+        font-weight: 700;
+        letter-spacing: -0.5px;
+        
+        span {
+            color: $secondary-main;
+        }
+    }
+}
+
+// Mobile menu item styling
+:global(.MuiListItem-root) {
+    border-radius: 8px;
+    margin-bottom: 4px;
+    transition: all 0.2s ease;
+    
+    &:hover {
+        background-color: rgba($primary-main, 0.08);
+    }
+    
+    &:active {
+        background-color: rgba($primary-main, 0.12);
+    }
+}
+
+// Custom tooltip styling
+:global(.MuiTooltip-tooltip) {
+    background-color: $primary-main;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    padding: 6px 10px;
+    font-weight: 500;
+}
+
+// Animation for badge
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+:global(.MuiBadge-badge) {
+    &.new-item {
+        animation: pulse 1.5s infinite;
+    }
 }
