@@ -1,4 +1,5 @@
-import React, { useRef, useEffect, useState } from "react";
+import { useRef, useEffect, useState } from "react";
+import PropTypes from 'prop-types';
 import { Link } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
@@ -14,6 +15,7 @@ import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import Slide from "@mui/material/Slide";
 
+
 // Icons
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
@@ -26,144 +28,80 @@ import VerifiedIcon from "@mui/icons-material/Verified";
 import styles from "./HomeFeatured.module.scss";
 import ROUTES from "../../routes/routes";
 
-// Pakistani products with images from web (these would be URLs in your actual app)
-const PRODUCTS = [
-  {
-    id: 1,
-    name: "Tapal Danedar Tea",
-    quantity: "950g",
-    price: 1150,
-    originalPrice: 1300,
-    discount: 12,
-    store: "Naheed Supermarket",
-    rating: 4.7,
-    reviewCount: 128,
-    image: "https://img.freepik.com/free-photo/tea-dried-herbs-fresh-herbs-wooden-spoon-table_1150-30513.jpg?size=626&ext=jpg"
-  },
-  {
-    id: 2,
-    name: "National Biryani Masala",
-    quantity: "100g",
-    price: 250,
-    originalPrice: 250,
-    discount: 0,
-    store: "Imtiaz Supermarket",
-    rating: 4.5,
-    reviewCount: 85,
-    image: "https://img.freepik.com/free-photo/top-view-spices-arrangement_23-2148657684.jpg?size=626&ext=jpg"
-  },
-  {
-    id: 3,
-    name: "Nestle Milkpak UHT Milk",
-    quantity: "1L",
-    price: 320,
-    originalPrice: 350,
-    discount: 9,
-    store: "Carrefour",
-    rating: 4.2,
-    reviewCount: 56,
-    image: "https://img.freepik.com/free-photo/plain-milk-glass-bottle_114579-35541.jpg?size=626&ext=jpg"
-  },
-  {
-    id: 4,
-    name: "Shangrila Ketchup",
-    quantity: "800g",
-    price: 490,
-    originalPrice: 550,
-    discount: 11,
-    store: "Al-Fatah",
-    rating: 4.0,
-    reviewCount: 42,
-    image: "https://img.freepik.com/free-photo/flat-lay-tomato-sauce-arrangement_23-2148748527.jpg?size=626&ext=jpg"
-  },
-  {
-    id: 5,
-    name: "Bake Parlor Spaghetti",
-    quantity: "400g",
-    price: 220,
-    originalPrice: 240,
-    discount: 8,
-    store: "Metro Cash & Carry",
-    rating: 4.3,
-    reviewCount: 37,
-    image: "https://img.freepik.com/free-photo/raw-spaghetti-pasta_144627-24214.jpg?size=626&ext=jpg"
-  },
-  {
-    id: 6,
-    name: "K&N's Frozen Chicken",
-    quantity: "1kg",
-    price: 850,
-    originalPrice: 950,
-    discount: 11,
-    store: "Hyperstar",
-    rating: 4.8,
-    reviewCount: 92,
-    image: "https://img.freepik.com/free-photo/fresh-raw-chicken-meat-cutting-board_1150-27774.jpg?size=626&ext=jpg"
-  },
-  {
-    id: 7,
-    name: "Rafhan Custard Powder",
-    quantity: "300g",
-    price: 280,
-    originalPrice: 300,
-    discount: 7,
-    store: "Naheed Supermarket",
-    rating: 4.4,
-    reviewCount: 63,
-    image: "https://img.freepik.com/free-photo/yogurt-pudding-dessert-sweet-delicious_1150-35374.jpg?size=626&ext=jpg"
-  },
-  {
-    id: 8,
-    name: "Olpers Milk",
-    quantity: "1.5L",
-    price: 410,
-    originalPrice: 430,
-    discount: 5,
-    store: "Imtiaz Supermarket",
-    rating: 4.6,
-    reviewCount: 74,
-    image: "https://img.freepik.com/free-photo/set-milk-bottles-table_1150-17929.jpg?size=626&ext=jpg"
-  }
-];
 
-function HomeFeatured() {
+
+function HomeFeatured({ 
+  products = [], 
+  selectedCategory = null, 
+  onRefresh = () => {}, 
+  onAddToCart = () => {}, 
+  loading = false, 
+  error = null, 
+  refreshing = false 
+}) {
   const scrollRef = useRef(null);
   const [favoritedItems, setFavoritedItems] = useState({});
-  const [isLoading, setIsLoading] = useState(true);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md"));
 
-  // Simulate loading 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 1000);
-    return () => clearTimeout(timer);
-  }, []);
+    // Extract price from string (e.g., "Rs. 825" -> 825)
+  const extractPrice = (ps) => {
+    if (!ps) return 0;
+    if (typeof ps === 'number') return ps;
+    const m = String(ps).match(/[\d,]+/);
+    return m ? parseInt(m[0].replace(/,/g, ''), 10) : 0;
+  };
+
+  // Transform vendor products to display format
+  const transformProducts = (vendorProducts) => {
+    return vendorProducts.map((vp) => {
+      const price = extractPrice(vp.product.price);
+      const discountedPrice = vp.discountType
+        ? vp.discountType === 'percentage'
+          ? price * (1 - vp.discountValue / 100)
+          : Math.max(0, price - vp.discountValue)
+        : price;
+      
+      return {
+        id: vp._id,
+        name: vp.product.title,
+        quantity: vp.product.quantity || '1 unit',
+        price: discountedPrice,
+        originalPrice: price,
+        discount: vp.discountType === 'percentage' ? vp.discountValue : 0,
+        store: vp.vendor.name,
+        rating: 4.5, // Default rating since API might not have this
+        reviewCount: Math.floor(Math.random() * 100) + 20, // Random review count
+        image: vp.product.imageUrl,
+        vendorProduct: vp // Keep original data for cart functionality
+      };
+    });
+  };
+
+  // Use transformed products
+  const displayProducts = transformProducts(products);
 
   // Intersection observer for animation
   useEffect(() => {
-    if (!isLoading) {
-      const observer = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-              entry.target.classList.add(styles.visible);
-            }
-          });
-        },
-        { threshold: 0.1 }
-      );
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add(styles.visible);
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
 
-      const cards = document.querySelectorAll(`.${styles["product-card"]}`);
-      cards.forEach((card) => observer.observe(card));
+    const cards = document.querySelectorAll(`.${styles["product-card"]}`);
+    cards.forEach((card) => observer.observe(card));
 
-      return () => {
-        cards.forEach((card) => observer.unobserve(card));
-      };
-    }
-  }, [isLoading]);
+    return () => {
+      cards.forEach((card) => observer.unobserve(card));
+    };
+  }, [displayProducts]);
 
   const scrollLeft = () => {
     if (scrollRef.current) {
@@ -187,9 +125,16 @@ function HomeFeatured() {
     }));
   };
 
-  const handleAddToCart = (e) => {
+  const handleAddToCart = async (e, product) => {
     e.preventDefault(); // Prevent navigation when clicking add button
-    // Add to cart logic would go here
+    
+    try {
+      if (product.vendorProduct) {
+        await onAddToCart(product.vendorProduct);
+      }
+    } catch (error) {
+      console.error('Error adding to cart:', error);
+    }
   };
 
   return (
@@ -202,6 +147,11 @@ function HomeFeatured() {
           <Typography variant="body1" className={styles["section-subtitle"]}>
             Hand-picked quality items at great prices
           </Typography>
+          {error && (
+            <Typography variant="body2" color="error" sx={{ mt: 1 }}>
+              {error}
+            </Typography>
+          )}
         </Box>
 
         <Box className={styles["scroll-container"]}>
@@ -215,7 +165,7 @@ function HomeFeatured() {
           </IconButton>
 
           <Box className={styles["products-container"]} ref={scrollRef}>
-            {isLoading ? (
+            {loading ? (
               // Skeleton loading state
               Array.from(new Array(6)).map((_, index) => (
                 <Card key={index} className={styles["product-card-skeleton"]}>
@@ -230,12 +180,41 @@ function HomeFeatured() {
                   </Box>
                 </Card>
               ))
+            ) : displayProducts.length === 0 ? (
+              // No data available message
+              <Box sx={{ 
+                display: 'flex', 
+                flexDirection: 'column', 
+                alignItems: 'center', 
+                justifyContent: 'center',
+                minHeight: '300px',
+                width: '100%',
+                textAlign: 'center',
+                padding: '40px 20px'
+              }}>
+                <Typography variant="h6" color="text.secondary" gutterBottom>
+                  📦 No products available
+                </Typography>
+                <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                  {selectedCategory 
+                    ? `No data available for this category near you.` 
+                    : `No products found near your location.`
+                  }
+                </Typography>
+                <Button 
+                  variant="outlined" 
+                  onClick={onRefresh}
+                  sx={{ mt: 2 }}
+                >
+                  Try Again
+                </Button>
+              </Box>
             ) : (
               // Actual content
-              PRODUCTS.map((product, index) => (
+              displayProducts.map((product) => (
                 <Link 
                   key={product.id}
-                  to={ROUTES.PRODUCT_DETAILS?.replace(":productId", product.id) || `/product/${product.id}`}
+                  to={ROUTES.PRODUCT_DETAILS?.replace(":productId", product.id) || `/products/${product.id}`}
                   className={styles["card-link"]}
                 >
                   <Card className={styles["product-card"]}>
@@ -313,7 +292,7 @@ function HomeFeatured() {
                           variant="contained" 
                           size="small" 
                           className={styles["add-to-cart"]}
-                          onClick={handleAddToCart}
+                          onClick={(e) => handleAddToCart(e, product)}
                           startIcon={<AddShoppingCartIcon />}
                         >
                           {isMobile ? "" : "Add"}
@@ -350,5 +329,15 @@ function HomeFeatured() {
     </Slide>
   );
 }
+
+HomeFeatured.propTypes = {
+  products: PropTypes.array,
+  selectedCategory: PropTypes.string,
+  onRefresh: PropTypes.func,
+  onAddToCart: PropTypes.func,
+  loading: PropTypes.bool,
+  error: PropTypes.string,
+  refreshing: PropTypes.bool,
+};
 
 export default HomeFeatured;

@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from "react";
+import { useRef, useEffect } from "react";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
@@ -25,16 +25,46 @@ import {
 } from '@mui/icons-material';
 
 import styles from "./HomeCategories.module.scss";
-import { useSelector, useDispatch } from "react-redux";
-import { getProductCategories } from "@/redux/products/productSlice";
+import PropTypes from 'prop-types';
 
-function HomeCategories() {
-  const dispatch = useDispatch();
-  const products = useSelector((state) => state.products);
+function HomeCategories({ 
+  categories = [], 
+  selectedCategory = null, 
+  onCategorySelect = () => {}, 
+  loading = false, 
+  error = null 
+}) {
+  // Get category icon based on name (similar to BBBolt)
+  const getCategoryIcon = (categoryName) => {
+    if (!categoryName) return <BreakfastDining className={styles["category-icon"]} />;
+    
+    switch (categoryName.toLowerCase()) {
+      case 'cooking_essentials':
+        return <Kitchen className={styles["category-icon"]} />;
+      case 'baby':
+        return <AcUnit className={styles["category-icon"]} />;
+      case 'bakery':
+        return <BakeryDining className={styles["category-icon"]} />;
+      case 'beverages':
+        return <LocalDrink className={styles["category-icon"]} />;
+      case 'dairy':
+        return <LocalDrink className={styles["category-icon"]} />;
+      case 'fresh_food':
+        return <Spa className={styles["category-icon"]} />;
+      case 'groceries':
+        return <Restaurant className={styles["category-icon"]} />;
+      case 'health_and_beauty':
+        return <CleaningServices className={styles["category-icon"]} />;
+      case 'household':
+        return <CleaningServices className={styles["category-icon"]} />;
+      default:
+        return <BreakfastDining className={styles["category-icon"]} />;
+    }
+  };
   const scrollRef = useRef(null);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-  const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md"));
+
 
   // Observer for scroll animation
   useEffect(() => {
@@ -111,9 +141,7 @@ function HomeCategories() {
     }
   ];
 
-  React.useEffect(() => {
-    dispatch(getProductCategories());
-  }, [dispatch]);
+
 
   const scrollLeft = () => {
     if (scrollRef.current) {
@@ -130,11 +158,11 @@ function HomeCategories() {
   };
 
   // Use mock data if API data isn't available
-  const categories = products.productCategories?.length > 0 
-    ? products.productCategories 
+  const displayCategories = categories.length > 0 
+    ? categories 
     : mockCategories;
 
-  if (products.loading) {
+  if (loading) {
     return (
       <Box className={styles["loading-container"]}>
         <div className={styles["loading-spinner"]}></div>
@@ -171,21 +199,23 @@ function HomeCategories() {
             className={styles["categories-container"]} 
             ref={scrollRef}
           > 
-          {categories.map((category, index) => (
+          {displayCategories.map((category, index) => (
               <Card 
-                key={index} 
-                className={styles["category-card"]}
+                key={category._id || index} 
+                className={`${styles["category-card"]} ${selectedCategory === category._id ? styles["category-selected"] : ""}`}
                 elevation={0}
+                onClick={() => onCategorySelect(category._id)}
+                sx={{ cursor: 'pointer' }}
               >
                   <div className={styles["icon-container"]}>
-                    {category.icon}
+                    {category.icon || getCategoryIcon(category.name)}
                   </div>
                   <CardContent className={styles["card-content"]}>
                     <Typography variant="h6" className={styles["category-title"]}>
-                      {category.category}
+                      {category.name ? category.name.replace(/_/g, ' ') : category.category}
                     </Typography>
                     <Typography variant="body2" className={styles["category-description"]}>
-                      {category.description}
+                      {category.description || 'Explore products'}
                     </Typography>
                   </CardContent>
               </Card>
@@ -205,5 +235,13 @@ function HomeCategories() {
     </Fade>
   );
 }
+
+HomeCategories.propTypes = {
+  categories: PropTypes.array,
+  selectedCategory: PropTypes.string,
+  onCategorySelect: PropTypes.func,
+  loading: PropTypes.bool,
+  error: PropTypes.string,
+};
 
 export default HomeCategories;

@@ -26,7 +26,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { useLocation } from '../../context/LocationContext';
 import { useAuth } from '../../context/AuthContext';
-import { categoryApi, productApi } from '../../services/api';
+import { categoryApi } from '../../services/api';
 import ROUTES from '../../routes/routes';
 
 // Icons
@@ -43,11 +43,11 @@ import {
   Store as StoreIcon,
   Category as CategoryIcon,
   TrendingUp as TrendingIcon,
-  Inventory as PackageIcon,
+  Package as PackageIcon,
   Tag as TagIcon,
   Delete as DeleteIcon,
-  ExpandMore as ChevronDownIcon,
-  UnfoldMore as ArrowUpDownIcon,
+  ChevronDown as ChevronDownIcon,
+  ArrowUpDown as ArrowUpDownIcon,
 } from '@mui/icons-material';
 
 // Animation components
@@ -75,7 +75,7 @@ const radiusOptions = [
   { value: 50, label: '50 km' },
 ];
 
-const RationPackNew = () => {
+const RationPacks = () => {
   const navigate = useNavigate();
   const theme = useTheme();
   const { location, getCurrentLocation } = useLocation();
@@ -130,12 +130,10 @@ const RationPackNew = () => {
   const fetchProducts = async (subcategoryId) => {
     setLoading(true);
     try {
-      // Fetch ALL products by subcategory (not nearby ones)
-      const response = await productApi.getProductsBySubCategory(subcategoryId);
+      const response = await categoryApi.getProductsBySubCategory(subcategoryId);
       setProducts(response.data || []);
     } catch (error) {
       console.error('Error fetching products:', error);
-      setProducts([]);
     } finally {
       setLoading(false);
     }
@@ -194,271 +192,6 @@ const RationPackNew = () => {
   const removeProduct = (productId) => {
     setSelectedProducts(selectedProducts.filter(p => p._id !== productId));
   };
-
-  // Render informational page for non-logged-in users
-  const renderInfoPage = () => (
-    <Box sx={{ minHeight: '100vh', bgcolor: 'background.default' }}>
-      {/* Header */}
-      <Box
-        sx={{
-          background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.primary.dark} 100%)`,
-          color: 'white',
-          py: 4,
-          px: 3,
-        }}
-      >
-        <Container maxWidth="lg">
-          <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-            <PackageIcon sx={{ fontSize: 32, mr: 2 }} />
-            <Typography variant="h4" sx={{ fontWeight: 700 }}>
-              Custom Ration Packs
-            </Typography>
-          </Box>
-          <Typography variant="body1" sx={{ opacity: 0.9 }}>
-            Create personalized grocery packs and find the best deals from nearby vendors
-          </Typography>
-        </Container>
-      </Box>
-
-      <Container maxWidth="lg" sx={{ py: 4 }}>
-        {/* Login Prompt */}
-        <Paper sx={{ p: 4, mb: 4, borderRadius: 2, textAlign: 'center' }}>
-          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mb: 3 }}>
-            <Avatar sx={{ width: 80, height: 80, mb: 2, bgcolor: 'primary.main' }}>
-              <PackageIcon sx={{ fontSize: 40 }} />
-            </Avatar>
-            <Typography variant="h5" sx={{ fontWeight: 600, mb: 1 }}>
-              Login to Create Custom Ration Packs
-            </Typography>
-            <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
-              Sign in to access our advanced ration pack builder and find the best deals from nearby vendors
-            </Typography>
-            <Button
-              variant="contained"
-              size="large"
-              onClick={() => navigate('/login')}
-              startIcon={<CartIcon />}
-              sx={{ px: 4, py: 1.5 }}
-            >
-              Login to Continue
-            </Button>
-          </Box>
-        </Paper>
-
-        {/* How It Works */}
-        <Paper sx={{ p: 4, mb: 4, borderRadius: 2 }}>
-          <Typography variant="h5" sx={{ fontWeight: 600, mb: 3 }}>
-            How Custom Ration Packs Work
-          </Typography>
-          
-          <Grid container spacing={4}>
-            <Grid item xs={12} md={6}>
-              <Box sx={{ display: 'flex', alignItems: 'flex-start', mb: 3 }}>
-                <Avatar sx={{ mr: 2, bgcolor: 'primary.main', width: 40, height: 40 }}>
-                  <Typography variant="h6" sx={{ fontWeight: 600 }}>1</Typography>
-                </Avatar>
-                <Box>
-                  <Typography variant="h6" sx={{ fontWeight: 600, mb: 1 }}>
-                    Select Your Items
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    Browse through categories and subcategories to select the products you want in your ration pack. 
-                    Mix and match items from different categories to create your perfect grocery list.
-                  </Typography>
-                </Box>
-              </Box>
-            </Grid>
-
-            <Grid item xs={12} md={6}>
-              <Box sx={{ display: 'flex', alignItems: 'flex-start', mb: 3 }}>
-                <Avatar sx={{ mr: 2, bgcolor: 'primary.main', width: 40, height: 40 }}>
-                  <Typography variant="h6" sx={{ fontWeight: 600 }}>2</Typography>
-                </Avatar>
-                <Box>
-                  <Typography variant="h6" sx={{ fontWeight: 600, mb: 1 }}>
-                    Find Nearby Vendors
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    Our system searches through nearby vendors within your selected radius to find stores 
-                    that carry your selected items. Get real-time availability and pricing information.
-                  </Typography>
-                </Box>
-              </Box>
-            </Grid>
-
-            <Grid item xs={12} md={6}>
-              <Box sx={{ display: 'flex', alignItems: 'flex-start', mb: 3 }}>
-                <Avatar sx={{ mr: 2, bgcolor: 'primary.main', width: 40, height: 40 }}>
-                  <Typography variant="h6" sx={{ fontWeight: 600 }}>3</Typography>
-                </Avatar>
-                <Box>
-                  <Typography variant="h6" sx={{ fontWeight: 600, mb: 1 }}>
-                    Compare & Choose
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    Compare prices, discounts, and availability across different vendors. 
-                    See which items each vendor has in stock and which ones might be missing.
-                  </Typography>
-                </Box>
-              </Box>
-            </Grid>
-
-            <Grid item xs={12} md={6}>
-              <Box sx={{ display: 'flex', alignItems: 'flex-start', mb: 3 }}>
-                <Avatar sx={{ mr: 2, bgcolor: 'primary.main', width: 40, height: 40 }}>
-                  <Typography variant="h6" sx={{ fontWeight: 600 }}>4</Typography>
-                </Avatar>
-                <Box>
-                  <Typography variant="h6" sx={{ fontWeight: 600, mb: 1 }}>
-                    Add to Cart & Order
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    Select your preferred vendor and add all available items to your cart with one click. 
-                    Complete your order and enjoy doorstep delivery or pickup options.
-                  </Typography>
-                </Box>
-              </Box>
-            </Grid>
-          </Grid>
-        </Paper>
-
-        {/* Features */}
-        <Paper sx={{ p: 4, mb: 4, borderRadius: 2 }}>
-          <Typography variant="h5" sx={{ fontWeight: 600, mb: 3 }}>
-            Key Features
-          </Typography>
-          
-          <Grid container spacing={3}>
-            <Grid item xs={12} sm={6} md={4}>
-              <Card sx={{ p: 3, height: '100%', textAlign: 'center' }}>
-                <Avatar sx={{ mx: 'auto', mb: 2, bgcolor: 'secondary.main', width: 60, height: 60 }}>
-                  <LocationIcon />
-                </Avatar>
-                <Typography variant="h6" sx={{ fontWeight: 600, mb: 1 }}>
-                  Location-Based Search
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  Find vendors within your specified radius (1km to 50km) for convenient shopping
-                </Typography>
-              </Card>
-            </Grid>
-
-            <Grid item xs={12} sm={6} md={4}>
-              <Card sx={{ p: 3, height: '100%', textAlign: 'center' }}>
-                <Avatar sx={{ mx: 'auto', mb: 2, bgcolor: 'secondary.main', width: 60, height: 60 }}>
-                  <TagIcon />
-                </Avatar>
-                <Typography variant="h6" sx={{ fontWeight: 600, mb: 1 }}>
-                  Smart Filtering
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  Filter by category, subcategory, price range, and sort by distance or price
-                </Typography>
-              </Card>
-            </Grid>
-
-            <Grid item xs={12} sm={6} md={4}>
-              <Card sx={{ p: 3, height: '100%', textAlign: 'center' }}>
-                <Avatar sx={{ mx: 'auto', mb: 2, bgcolor: 'secondary.main', width: 60, height: 60 }}>
-                  <TrendingIcon />
-                </Avatar>
-                <Typography variant="h6" sx={{ fontWeight: 600, mb: 1 }}>
-                  Price Comparison
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  Compare prices across multiple vendors to get the best deals and discounts
-                </Typography>
-              </Card>
-            </Grid>
-
-            <Grid item xs={12} sm={6} md={4}>
-              <Card sx={{ p: 3, height: '100%', textAlign: 'center' }}>
-                <Avatar sx={{ mx: 'auto', mb: 2, bgcolor: 'secondary.main', width: 60, height: 60 }}>
-                  <CheckIcon />
-                </Avatar>
-                <Typography variant="h6" sx={{ fontWeight: 600, mb: 1 }}>
-                  Real-Time Availability
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  See which items are in stock and which are unavailable at each vendor
-                </Typography>
-              </Card>
-            </Grid>
-
-            <Grid item xs={12} sm={6} md={4}>
-              <Card sx={{ p: 3, height: '100%', textAlign: 'center' }}>
-                <Avatar sx={{ mx: 'auto', mb: 2, bgcolor: 'secondary.main', width: 60, height: 60 }}>
-                  <StoreIcon />
-                </Avatar>
-                <Typography variant="h6" sx={{ fontWeight: 600, mb: 1 }}>
-                  Vendor Information
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  Get detailed vendor information including ratings, distance, and delivery options
-                </Typography>
-              </Card>
-            </Grid>
-
-            <Grid item xs={12} sm={6} md={4}>
-              <Card sx={{ p: 3, height: '100%', textAlign: 'center' }}>
-                <Avatar sx={{ mx: 'auto', mb: 2, bgcolor: 'secondary.main', width: 60, height: 60 }}>
-                  <CartIcon />
-                </Avatar>
-                <Typography variant="h6" sx={{ fontWeight: 600, mb: 1 }}>
-                  One-Click Cart
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  Add all available items from your selected vendor to cart with a single click
-                </Typography>
-              </Card>
-            </Grid>
-          </Grid>
-        </Paper>
-
-        {/* Benefits */}
-        <Paper sx={{ p: 4, borderRadius: 2 }}>
-          <Typography variant="h5" sx={{ fontWeight: 600, mb: 3 }}>
-            Why Choose Custom Ration Packs?
-          </Typography>
-          
-          <Grid container spacing={3}>
-            <Grid item xs={12} md={4}>
-              <Box sx={{ textAlign: 'center', p: 2 }}>
-                <Typography variant="h4" color="primary" sx={{ fontWeight: 700, mb: 1 }}>
-                  Save Time
-                </Typography>
-                <Typography variant="body1" color="text.secondary">
-                  No more visiting multiple stores. Find all your items from nearby vendors in one place.
-                </Typography>
-              </Box>
-            </Grid>
-
-            <Grid item xs={12} md={4}>
-              <Box sx={{ textAlign: 'center', p: 2 }}>
-                <Typography variant="h4" color="primary" sx={{ fontWeight: 700, mb: 1 }}>
-                  Save Money
-                </Typography>
-                <Typography variant="body1" color="text.secondary">
-                  Compare prices and find the best deals. Get discounts and offers from multiple vendors.
-                </Typography>
-              </Box>
-            </Grid>
-
-            <Grid item xs={12} md={4}>
-              <Box sx={{ textAlign: 'center', p: 2 }}>
-                <Typography variant="h4" color="primary" sx={{ fontWeight: 700, mb: 1 }}>
-                  Stay Informed
-                </Typography>
-                <Typography variant="body1" color="text.secondary">
-                  Know exactly what's available, what's missing, and get real-time pricing updates.
-                </Typography>
-              </Box>
-            </Grid>
-          </Grid>
-        </Paper>
-      </Container>
-    </Box>
-  );
 
   // Render filters header
   const renderFiltersHeader = () => (
@@ -570,7 +303,7 @@ const RationPackNew = () => {
                   <Typography variant="body2" noWrap>
                     {item.title}
                   </Typography>
-                  <Typography variant="caption" color="primary" sx={{ fontWeight: 600 }}>
+                  <Typography variant="caption" color="text.secondary">
                     Rs {item.price}
                   </Typography>
                 </Box>
@@ -709,7 +442,6 @@ const RationPackNew = () => {
         <Grid container spacing={3}>
           {products.map((product) => {
             const isSelected = selectedProducts.some(p => p._id === product._id);
-            
             return (
               <Grid item xs={12} sm={6} md={4} key={product._id}>
                 <MotionCard
@@ -751,11 +483,6 @@ const RationPackNew = () => {
       )}
     </Paper>
   );
-
-  // Show info page for non-logged-in users
-  if (!isLoggedIn) {
-    return renderInfoPage();
-  }
 
   return (
     <Box sx={{ minHeight: '100vh', bgcolor: 'background.default' }}>
@@ -829,4 +556,4 @@ const RationPackNew = () => {
   );
 };
 
-export default RationPackNew;
+export default RationPacks;
