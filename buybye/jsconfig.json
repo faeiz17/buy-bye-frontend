@@ -1,18 +1,24 @@
 {
   "compilerOptions": {
-    "jsx": "react-jsx",           // Enables React JSX Transform
-    "module": "CommonJS",         // CommonJS module resolution
-    "target": "ES6",              // Enables modern JavaScript features
-    "checkJs": true,              // Type-checking for JS files
-    "allowJs": true,              // Allows JavaScript files in the project
-    "moduleResolution": "node",   // Resolves modules like Node.js
-    "esModuleInterop": true,      // Compatibility with ES modules
-    "baseUrl": ".",               // Base directory for imports
-    "paths": {                    // Support for absolute imports
-      "@/*": ["src/*"],           // Maps '@' to 'src' folder
-      "@mui/*": ["node_modules/@mui/*"]// Support for SCSS modules
+    "jsx": "react-jsx", // Enables React JSX Transform
+    "module": "CommonJS", // CommonJS module resolution
+    "target": "ES6", // Enables modern JavaScript features
+    "checkJs": false, // Type-checking for JS files
+    "allowJs": true, // Allows JavaScript files in the project
+    "moduleResolution": "node", // Resolves modules like Node.js
+    "esModuleInterop": true, // Compatibility with ES modules
+    "baseUrl": ".", // Base directory for imports
+    "paths": {
+      // Support for absolute imports
+      "@/*": ["src/*"], // Maps '@' to 'src' folder
+      "@mui/*": ["node_modules/@mui/*"] // Support for SCSS modules
     }
   },
-  "include": ["src/**/*", "*.js", "node_modules/@mui/**/*", "src/**/*.module.scss"], 
+  "include": [
+    "src/**/*",
+    "*.js",
+    "node_modules/@mui/**/*",
+    "src/**/*.module.scss"
+  ],
   "exclude": ["node_modules", "**/node_modules/*"]
 }

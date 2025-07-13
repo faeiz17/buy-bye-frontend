@@ -1,10 +1,14 @@
 import { Outlet, Navigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useAuth } from "../context/AuthContext";
 
 const ProtectedRoutes = () => {
-  const user = useSelector((state) => state.user);
+  const { isLoggedIn, loading } = useAuth();
 
-  return user.data.token ? <Outlet /> : <Navigate to="/login" />;
+  if (loading) {
+    return <div>Loading...</div>; // You can replace this with a proper loading component
+  }
+
+  return isLoggedIn ? <Outlet /> : <Navigate to="/login" />;
 };
 
 export default ProtectedRoutes;

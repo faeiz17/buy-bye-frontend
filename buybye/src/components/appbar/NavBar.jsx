@@ -11,12 +11,14 @@ import ListItemText from '@mui/material/ListItemText';
 import Box from '@mui/material/Box';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import InputBase from '@mui/material/InputBase';
+
 import Badge from '@mui/material/Badge';
 import Avatar from '@mui/material/Avatar';
 import Tooltip from '@mui/material/Tooltip';
 import Paper from '@mui/material/Paper';
 import Fade from '@mui/material/Fade';
+import { useAuth } from '../../context/AuthContext';
+import { useCart } from '../../context/CartContext';
 
 // Icons
 import MenuIcon from "@mui/icons-material/Menu";
@@ -33,6 +35,7 @@ import LoginIcon from "@mui/icons-material/Login";
 import HowToRegIcon from "@mui/icons-material/HowToReg";
 import CloseIcon from "@mui/icons-material/Close";
 import FavoriteIcon from "@mui/icons-material/Favorite";
+import ReceiptIcon from "@mui/icons-material/Receipt";
 
 import { Link } from "react-router-dom";
 import useMediaQuery from "@mui/material/useMediaQuery";
@@ -45,12 +48,13 @@ function NavBar() {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md"));
+  const { isLoggedIn, user, logout } = useAuth();
+  const { getCartCount } = useCart();
 
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
-  const [searchFocused, setSearchFocused] = useState(false);
+
   const [scrolled, setScrolled] = useState(false);
-  const [cartCount, setCartCount] = useState(4);
 
   // Handle scroll effect
   useEffect(() => {
@@ -87,6 +91,7 @@ function NavBar() {
       case "Contact": return <ContactMailIcon />;
       case "About Us": return <InfoIcon />;
       case "Cart": return <ShoppingCartIcon />;
+      case "Orders": return <ReceiptIcon />;
       default: return null;
     }
   };
@@ -95,6 +100,7 @@ function NavBar() {
     { name: "Home", to: "/" },
     { name: "Shop", to: "/shop" },
     { name: "Ration Pack", to: "/ration-pack" },
+    ...(isLoggedIn ? [{ name: "Orders", to: "/orders" }] : []),
     { name: "Contact", to: "/contact" },
     { name: "About Us", to: "/about-us" },
     isMobile ? { name: "Cart", to: "/cart" } : {},
@@ -170,7 +176,8 @@ function NavBar() {
               
               <Box sx={{ mt: 2, mb: 2, mx: 2 }}>
                 <Paper
-                  component="form"
+                  component={Link}
+                  to="/search"
                   elevation={0}
                   sx={{
                     display: 'flex',
@@ -179,14 +186,21 @@ function NavBar() {
                     borderRadius: 2,
                     bgcolor: alpha('#f5f5f5', 0.7),
                     px: 1,
+                    cursor: 'pointer',
+                    textDecoration: 'none',
+                    transition: 'all 0.2s ease',
+                    '&:hover': {
+                      bgcolor: alpha('#f5f5f5', 0.9),
+                      border: '2px solid #4d216d',
+                    }
                   }}
                 >
-                  <InputBase
-                    sx={{ ml: 1, flex: 1 }}
-                    placeholder="Search products..."
-                    autoComplete="off"
-                  />
-                  <IconButton type="button" sx={{ p: 1 }}>
+                  <Typography
+                    sx={{ ml: 1, flex: 1, color: 'text.secondary', fontSize: '0.875rem' }}
+                  >
+                    Search products...
+                  </Typography>
+                  <IconButton sx={{ p: 1 }}>
                     <SearchIcon color="primary" fontSize="small" />
                   </IconButton>
                 </Paper>
@@ -228,36 +242,90 @@ function NavBar() {
                 flexDirection: 'column',
                 gap: 1,
               }}>
-                <MenuItem 
-                  component={Link} 
-                  to="/login"
-                  sx={{
-                    borderRadius: 2,
-                    '&:hover': {
-                      bgcolor: alpha('#4d216d', 0.08),
-                    }
-                  }}
-                >
-                  <ListItemIcon sx={{ minWidth: 40, color: '#4d216d' }}>
-                    <LoginIcon />
-                  </ListItemIcon>
-                  <ListItemText primary="Login" />
-                </MenuItem>
-                <MenuItem 
-                  component={Link} 
-                  to="/signup"
-                  sx={{
-                    borderRadius: 2,
-                    '&:hover': {
-                      bgcolor: alpha('#4d216d', 0.08),
-                    }
-                  }}
-                >
-                  <ListItemIcon sx={{ minWidth: 40, color: '#4d216d' }}>
-                    <HowToRegIcon />
-                  </ListItemIcon>
-                  <ListItemText primary="Sign Up" />
-                </MenuItem>
+                {!isLoggedIn ? (
+                  <>
+                    <MenuItem 
+                      component={Link} 
+                      to="/login"
+                      sx={{
+                        borderRadius: 2,
+                        '&:hover': {
+                          bgcolor: alpha('#4d216d', 0.08),
+                        }
+                      }}
+                    >
+                      <ListItemIcon sx={{ minWidth: 40, color: '#4d216d' }}>
+                        <LoginIcon />
+                      </ListItemIcon>
+                      <ListItemText primary="Login" />
+                    </MenuItem>
+                    <MenuItem 
+                      component={Link} 
+                      to="/signup"
+                      sx={{
+                        borderRadius: 2,
+                        '&:hover': {
+                          bgcolor: alpha('#4d216d', 0.08),
+                        }
+                      }}
+                    >
+                      <ListItemIcon sx={{ minWidth: 40, color: '#4d216d' }}>
+                        <HowToRegIcon />
+                      </ListItemIcon>
+                      <ListItemText primary="Sign Up" />
+                    </MenuItem>
+                  </>
+                ) : (
+                  <>
+                    <MenuItem 
+                      component={Link} 
+                      to="/profile"
+                      sx={{
+                        borderRadius: 2,
+                        '&:hover': {
+                          bgcolor: alpha('#4d216d', 0.08),
+                        }
+                      }}
+                    >
+                      <ListItemIcon sx={{ minWidth: 40, color: '#4d216d' }}>
+                        <PersonIcon />
+                      </ListItemIcon>
+                      <ListItemText primary={user?.name || "Profile"} />
+                    </MenuItem>
+                    <MenuItem 
+                      component={Link} 
+                      to="/orders"
+                      sx={{
+                        borderRadius: 2,
+                        '&:hover': {
+                          bgcolor: alpha('#4d216d', 0.08),
+                        }
+                      }}
+                    >
+                      <ListItemIcon sx={{ minWidth: 40, color: '#4d216d' }}>
+                        <ReceiptIcon />
+                      </ListItemIcon>
+                      <ListItemText primary="Orders" />
+                    </MenuItem>
+                    <MenuItem 
+                      onClick={() => {
+                        logout();
+                        handleDrawerToggle();
+                      }}
+                      sx={{
+                        borderRadius: 2,
+                        '&:hover': {
+                          bgcolor: alpha('#4d216d', 0.08),
+                        }
+                      }}
+                    >
+                      <ListItemIcon sx={{ minWidth: 40, color: '#4d216d' }}>
+                        <LoginIcon />
+                      </ListItemIcon>
+                      <ListItemText primary="Logout" />
+                    </MenuItem>
+                  </>
+                )}
               </Box>
             </Drawer>
           </>
@@ -289,8 +357,9 @@ function NavBar() {
         {/* Desktop Search Bar */}
         {!isMobile && (
           <Paper
-            component="form"
-            elevation={searchFocused ? 2 : 0}
+            component={Link}
+            to="/search"
+            elevation={0}
             sx={{
               display: 'flex',
               alignItems: 'center',
@@ -300,25 +369,30 @@ function NavBar() {
               px: 2,
               py: 0.5,
               borderRadius: 3,
-              border: searchFocused 
-                ? '2px solid #4d216d' 
-                : '1px solid rgba(77, 33, 109, 0.2)',
+              border: '1px solid rgba(77, 33, 109, 0.2)',
               bgcolor: alpha('#f5f5f5', 0.7),
               transition: 'all 0.2s ease',
+              cursor: 'pointer',
+              textDecoration: 'none',
               '&:hover': {
                 bgcolor: alpha('#f5f5f5', 0.9),
+                transform: 'translateY(-1px)',
+                boxShadow: 3,
+                border: '2px solid #4d216d',
               }
             }}
           >
-            <SearchIcon sx={{ color: searchFocused ? '#4d216d' : 'text.secondary', mr: 1 }} />
-            <InputBase
-              sx={{ flex: 1 }}
-              placeholder="Search for products..."
-              inputProps={{ 'aria-label': 'search' }}
-              onFocus={() => setSearchFocused(true)}
-              onBlur={() => setSearchFocused(false)}
-              autoComplete="off"
-            />
+            <SearchIcon sx={{ color: 'text.secondary', mr: 1 }} />
+            <Typography
+              sx={{
+                flex: 1,
+                color: 'text.secondary',
+                fontSize: '0.875rem',
+                pointerEvents: 'none',
+              }}
+            >
+              Search for products...
+            </Typography>
           </Paper>
         )}
 
@@ -336,7 +410,7 @@ function NavBar() {
                 }
               }}
             >
-              <Badge badgeContent={cartCount} color="secondary">
+              <Badge badgeContent={getCartCount()} color="secondary">
                 <ShoppingCartIcon />
               </Badge>
             </IconButton>
@@ -448,7 +522,7 @@ function NavBar() {
                 }}
               >
                 <Badge 
-                  badgeContent={cartCount} 
+                  badgeContent={getCartCount()} 
                 
                   color= 'secondary'
                   sx={{
@@ -520,61 +594,103 @@ function NavBar() {
           anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
           TransitionComponent={Fade}
         >
-          <MenuItem 
-            onClick={handleProfileMenuClose} 
-            component={Link} 
-            to="/login"
-            sx={{
-              borderRadius: 1,
-              mx: 1,
-              my: 0.5,
-              gap: 1.5,
-              '&:hover': {
-                bgcolor: alpha('#4d216d', 0.08),
-              }
-            }}
-          >
-            <LoginIcon fontSize="small" sx={{ color: '#4d216d' }} />
-            <Typography>Login</Typography>
-          </MenuItem>
-          
-          <MenuItem 
-            onClick={handleProfileMenuClose}
-            component={Link} 
-            to="/signup"
-            sx={{
-              borderRadius: 1,
-              mx: 1,
-              my: 0.5,
-              gap: 1.5,
-              '&:hover': {
-                bgcolor: alpha('#4d216d', 0.08),
-              }
-            }}
-          >
-            <HowToRegIcon fontSize="small" sx={{ color: '#4d216d' }} />
-            <Typography>Sign Up</Typography>
-          </MenuItem>
-          
-          <Box sx={{ my: 1, borderTop: '1px solid rgba(77, 33, 109, 0.1)' }} />
-          
-          <MenuItem 
-            onClick={handleProfileMenuClose}
-            component={Link} 
-            to="/profile"
-            sx={{
-              borderRadius: 1,
-              mx: 1,
-              my: 0.5,
-              gap: 1.5,
-              '&:hover': {
-                bgcolor: alpha('#4d216d', 0.08),
-              }
-            }}
-          >
-            <PersonIcon fontSize="small" sx={{ color: '#4d216d' }} />
-            <Typography>Profile</Typography>
-          </MenuItem>
+          {!isLoggedIn ? (
+            <>
+              <MenuItem 
+                onClick={handleProfileMenuClose} 
+                component={Link} 
+                to="/login"
+                sx={{
+                  borderRadius: 1,
+                  mx: 1,
+                  my: 0.5,
+                  gap: 1.5,
+                  '&:hover': {
+                    bgcolor: alpha('#4d216d', 0.08),
+                  }
+                }}
+              >
+                <LoginIcon fontSize="small" sx={{ color: '#4d216d' }} />
+                <Typography>Login</Typography>
+              </MenuItem>
+              
+              <MenuItem 
+                onClick={handleProfileMenuClose}
+                component={Link} 
+                to="/signup"
+                sx={{
+                  borderRadius: 1,
+                  mx: 1,
+                  my: 0.5,
+                  gap: 1.5,
+                  '&:hover': {
+                    bgcolor: alpha('#4d216d', 0.08),
+                  }
+                }}
+              >
+                <HowToRegIcon fontSize="small" sx={{ color: '#4d216d' }} />
+                <Typography>Sign Up</Typography>
+              </MenuItem>
+            </>
+          ) : (
+            <>
+              <MenuItem 
+                onClick={handleProfileMenuClose}
+                component={Link} 
+                to="/profile"
+                sx={{
+                  borderRadius: 1,
+                  mx: 1,
+                  my: 0.5,
+                  gap: 1.5,
+                  '&:hover': {
+                    bgcolor: alpha('#4d216d', 0.08),
+                  }
+                }}
+              >
+                <PersonIcon fontSize="small" sx={{ color: '#4d216d' }} />
+                <Typography>{user?.name || "Profile"}</Typography>
+              </MenuItem>
+              <MenuItem 
+                onClick={handleProfileMenuClose}
+                component={Link} 
+                to="/orders"
+                sx={{
+                  borderRadius: 1,
+                  mx: 1,
+                  my: 0.5,
+                  gap: 1.5,
+                  '&:hover': {
+                    bgcolor: alpha('#4d216d', 0.08),
+                  }
+                }}
+              >
+                <ReceiptIcon fontSize="small" sx={{ color: '#4d216d' }} />
+                <Typography>Orders</Typography>
+              </MenuItem>
+              
+              <Box sx={{ my: 1, borderTop: '1px solid rgba(77, 33, 109, 0.1)' }} />
+              
+              <MenuItem 
+                onClick={() => {
+                  logout();
+                  handleProfileMenuClose();
+                }}
+                sx={{
+                  borderRadius: 1,
+                  mx: 1,
+                  my: 0.5,
+                  gap: 1.5,
+                  '&:hover': {
+                    bgcolor: alpha('#4d216d', 0.08),
+                  }
+                }}
+              >
+                <LoginIcon fontSize="small" sx={{ color: '#4d216d' }} />
+                <Typography>Logout</Typography>
+              </MenuItem>
+            </>
+          )}
         </Menu>
       </Toolbar>
     </AppBar>

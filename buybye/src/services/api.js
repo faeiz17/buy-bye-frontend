@@ -8,7 +8,7 @@ const api = axios.create({
   headers: {
     "Content-Type": "application/json",
   },
-  timeout: 10000, // 10 seconds timeout
+  timeout: 30000, // 30 seconds timeout for slower connections
 });
 
 // Request interceptor to attach the auth token to every request
@@ -61,6 +61,7 @@ export const customerApi = {
   register: (data) => api.post("/customers/register", data),
   login: (data) => api.post("/customers/login", data),
   verifyEmail: (token) => api.get(`/customers/verify-email/${token}`),
+  resendEmailVerification: () => api.post("/customers/resend-verification"),
   forgotPassword: (email) => api.post("/customers/forgot-password", { email }),
   resetPassword: (token, password) =>
     api.post(`/customers/reset-password/${token}`, { password }),
@@ -81,6 +82,9 @@ export const customerApi = {
     api.get("/customers/search-nearby-vendors-products", { params }),
   priceComparison: (params) =>
     api.get("/customers/price-comparison", { params }),
+  createRationPack: (data) => api.post("/customers/ration-packs", data, {
+    timeout: 30000 // 30 seconds timeout for this specific endpoint
+  }),
 };
 
 // Products API endpoints
@@ -110,6 +114,12 @@ export const vendorProductApi = {
     api.get("/customers/nearby-products", {
       params: { ...locationParams, keyword },
     }),
+  getVendorProductsByFilters: (params) => {
+    const { vendorId, ...otherParams } = params;
+    return api.get(`/vendor-products/by-vendor/${vendorId}`, { 
+      params: otherParams 
+    });
+  },
 };
 
 export const vendorApi = {
